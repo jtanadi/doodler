@@ -1,0 +1,10 @@
+{
+  "name": "doodler",
+  "version": "0.1.0",
+  "description": "Small doodling app",
+  "main": "app.js",
+  "repository": "https://github.com/jtanadi/doodler.git",
+  "author": "JT",
+  "license": "MIT",
+  "private": false
+}
