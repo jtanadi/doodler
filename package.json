@@ -7,6 +7,9 @@
   "author": "JT",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "dev": "parcel src/index.html --out-dir dev/"
+  },
   "dependencies": {
     "react": "^16.9.0",
     "react-dom": "^16.9.0"
