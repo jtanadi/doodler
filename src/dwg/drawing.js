@@ -64,13 +64,14 @@ export default class Drawing {
     const path = new Path2D();
     if (mode === "rect") {
       drawMethods.rect(x0, y0, x1, y1, path);
-    } else if (mode === "circ") {
+    } else if (mode === "ellipse") {
       drawMethods.ellipse(x0, y0, x1, y1, path);
     } else if (mode === "line") {
       drawMethods.line(x0, y0, x1, y1, path);
     }
 
     // Draw marquee
+    this.context.strokeStyle = "gray";
     this.context.stroke(path);
   }
 
@@ -84,7 +85,7 @@ export default class Drawing {
     if (mode === "rect") {
       const [x, y, width, height] = drawMethods.rect(x0, y0, x1, y1, path);
       svg = `<rect x="${x}" y="${y}" width="${width}" height="${height}" stroke="${stroke}" fill="${fill}"/>`;
-    } else if (mode === "circ") {
+    } else if (mode === "ellipse") {
       const [cx, cy, rx, ry] = drawMethods.ellipse(x0, y0, x1, y1, path);
       svg = `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" stroke="${stroke}" fill="${fill}"/>`
     } else if (mode === "line") {
@@ -92,14 +93,17 @@ export default class Drawing {
       svg = `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${stroke}" fill="none"/>`;
     }
 
-    this.shapes.push({ path, svg });
+    this.shapes.push({ path, stroke, svg });
     this.drawShapes();
     this.history.clear();
   }
 
   drawShapes() {
     this.clear();
-    this.shapes.forEach(shape => this.context.stroke(shape.path));
+    this.shapes.forEach(shape => {
+      this.context.strokeStyle = shape.stroke;
+      this.context.stroke(shape.path);
+    });
   }
 
   load(svg) {
