@@ -6,7 +6,7 @@ import Canvas from "./components/canvas.jsx";
 
 import Drawing from "./dwg/drawing.js";
 
-const TOOLS = ["rect", "circ", "line"];
+const TOOLS = ["rect", "ellipse", "line"];
 
 class App extends Component {
   constructor() {
