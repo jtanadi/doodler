@@ -24,7 +24,7 @@ function svgToPaths(svgs) {
   // svgs is an array
   // [<line.../>, <rect.../>, <ellipse.../>]
   return svgs.map(svg => {
-    // const path = new Path2D();
+    const path = new Path2D();
     const properties = svg
       .split(" ")
       .filter(prop => {
