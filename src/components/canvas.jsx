@@ -1,30 +1,72 @@
 import React, { Component } from "react";
 
+import Drawing from "../dwg/drawing.js";
+
 class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      drawing: [],
+      width: 400,
+      height: 500,
+      mouseDown: false,
+      startX: 0,
+      startY: 0,
     };
 
-    this.draw = this.draw.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
   }
 
-  draw(ev) {
+  handleMouseDown(ev) {
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
-
     if (x < 0 || y < 0) return;
 
-    console.log(x, y, this.props.selectedTool)
+    this.setState({ mouseDown: true, startX: x, startY: y })
+  }
+
+  handleMouseMove(ev) {
+    const { startX, startY, mouseDown } = this.state;
+
+    if (!mouseDown) return;
+    const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
+
+    this.dwg.drawMarquee(startX, startY, x, y, this.props.selectedTool, "green");
+  }
+
+  handleMouseUp(ev) {
+    const { startX, startY } = this.state;
+    const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
+
+    this.dwg.createShape(startX, startY, x, y, this.props.selectedTool, "green");
+    this.setState({ mouseDown: false });
+  }
+
+  handleUndo() {
+    this.dwg.undo()
+  }
+
+  handleRedo() {
+    this.dwg.redo()
+  }
+
+  componentDidMount() {
+    const canvas = document.getElementById("canvas");
+    this.dwg = new Drawing(canvas)
   }
 
   render() {
+    const { width, height } = this.state;
     return (
-      <div
+      <canvas
         id="canvas"
-        onClick={ this.draw }
+        onMouseDown={ this.handleMouseDown }
+        onMouseMove={ this.handleMouseMove }
+        onMouseUp={ this.handleMouseUp }
+        width={ `${width}px` }
+        height={ `${height}px` }
       >
-      </div>
+      </canvas>
     );
   }
 }

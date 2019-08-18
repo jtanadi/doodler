@@ -16,11 +16,15 @@
 }
 
 #toolbar-container {
-  width: calc(4 * 3rem);
+  width: 100%;
   height: 2rem;
   margin-bottom: 0.5rem;
   display: flex;
-  overflow: hidden;
+  justify-content: space-between;
+}
+
+#bar-left, #bar-right {
+  display: flex;
 }
 
 .tool {
@@ -40,9 +44,11 @@
   border-radius: 0 0.35rem 0.35rem 0;
 }
 
+.tool.selected {
+  background-color: green;
+}
+
 #canvas {
-  width: 400px;
-  height: 500px;
   border: 1px solid green;
   border-radius: 0.35rem;
 }
@@ -51,6 +57,3 @@
   background-color: lightgray;
 }
 
-.tool.selected {
-  background-color: green;
-}
