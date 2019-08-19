@@ -4,7 +4,7 @@ function LeftBar(props) {
   const { tools, selectedTool, side, handleClick } = props;
   return (
     <div className="bar" id="bar-left">{
-      tools.map(tool => {
+      tools.map((tool, i) => {
         const className = tool === selectedTool
           ? "tool selected"
           : "tool"
@@ -16,6 +16,7 @@ function LeftBar(props) {
             id={ tool }
             onClick={ ev => handleClick(ev.target.id) }
           >
+            <span className="small">{ i + 1 }</span>
           </div>
         )
       })
@@ -38,19 +39,23 @@ class RightBar extends Component {
   }
 
   render() {
-    const tools = ["undo", "redo"];
+    const tools = {
+      "undo": "↶",
+      "redo": "↷",
+    };
     return (
       <div className="bar" id="bar-right"> {
-        tools.map(tool => (
+        Object.keys(tools).map(key => (
           <div
-            key={ tool }
+            key={ key }
             className="tool"
-            id={ tool }
+            id={ key }
             onMouseDown={ this.addSelected }
             onMouseUp={ this.removeSelected }
             onMouseLeave={ this.removeSelected }
             onClick={ ev => this.props.handleClick(ev.target.id) }
           >
+            <span>{ tools[key] }</span>
           </div>
         ))
       }</div>
