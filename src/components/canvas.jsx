@@ -31,28 +31,15 @@ class Canvas extends Component {
     if (!mouseDown) return;
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
 
-    this.dwg.drawMarquee(startX, startY, x, y, this.props.selectedTool, "green");
+    this.props.drawing.drawMarquee(startX, startY, x, y, this.props.selectedTool, "green");
   }
 
   handleMouseUp(ev) {
     const { startX, startY } = this.state;
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
 
-    this.dwg.createShape(startX, startY, x, y, this.props.selectedTool, "green");
+    this.props.drawing.createShape(startX, startY, x, y, this.props.selectedTool, "green");
     this.setState({ mouseDown: false });
-  }
-
-  handleUndo() {
-    this.dwg.undo()
-  }
-
-  handleRedo() {
-    this.dwg.redo()
-  }
-
-  componentDidMount() {
-    const canvas = document.getElementById("canvas");
-    this.dwg = new Drawing(canvas)
   }
 
   render() {

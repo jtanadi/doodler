@@ -12,6 +12,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      drawing: {},
       tool: "rect",
     };
     this.child = React.createRef();
@@ -26,9 +27,9 @@ class App extends Component {
     if (numKey > 0 && numKey <= TOOLS.length) {
       this.pickTool(TOOLS[numKey - 1]);
     } else if (ev.key === "u") {
-      this.changeHistory("undo")
+      this.changeHistory("undo");
     } else if (ev.key === "r") {
-      this.changeHistory("redo")
+      this.changeHistory("redo");
     }
   }
 
@@ -37,15 +38,20 @@ class App extends Component {
   }
 
   changeHistory(action) {
+    const { drawing } = this.state;
     if (action === "undo") {
-      this.child.current.handleUndo();
+      drawing.undo()
     } else if (action === "redo") {
-      this.child.current.handleRedo();
+      drawing.redo()
     }
   }
 
   componentDidMount() {
     document.addEventListener("keypress", this.routeKeyPress)
+
+    const canvas = document.getElementById("canvas")
+    const drawing = new Drawing(canvas)
+    this.setState({ drawing });
   }
 
   componentWillUnmount() {
@@ -53,7 +59,7 @@ class App extends Component {
   }
 
   render() {
-    const { tool } = this.state;
+    const { tool, drawing } = this.state;
     return (
       <div id="wrapper">
         <Toolbar
@@ -63,6 +69,7 @@ class App extends Component {
           changeHistory={ this.changeHistory }
         />
         <Canvas
+          drawing={ drawing }
           selectedTool={ tool }
           ref={ this.child }
         />
