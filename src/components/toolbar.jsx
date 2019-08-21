@@ -12,9 +12,9 @@ function removeSelectedClass(target) {
 
 export default function Toolbar(props) {
   const {
-    drawTools,
+    drawingTools,
     historyTools,
-    selectedTool,
+    currentTool,
     pickTool,
     changeHistory
   } = props;
@@ -23,8 +23,8 @@ export default function Toolbar(props) {
     <div id="toolbar-container">
       <Bar side="left">
         <BarItems
-          items={ drawTools }
-          selectedItem={ selectedTool }
+          items={ drawingTools }
+          selectedItem={ currentTool }
           itemClass="tool"
           onClick={ ev => pickTool(ev.target.id) }
         />
