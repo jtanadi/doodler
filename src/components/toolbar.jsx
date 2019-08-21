@@ -2,21 +2,15 @@ import React from "react";
 import Bar from "./bar.jsx";
 import BarItems from "./barItems.jsx";
 
-function addSelectedClass(target) {
-  target.classList.add("selected");
-}
-
-function removeSelectedClass(target) {
-  target.classList.add("selected");
-}
-
 export default function Toolbar(props) {
   const {
     drawingTools,
     historyTools,
     currentTool,
     pickTool,
-    changeHistory
+    changeHistory,
+    addSelected,
+    removeSelected,
   } = props;
 
   return (
@@ -33,9 +27,9 @@ export default function Toolbar(props) {
         <BarItems
           items={ historyTools }
           itemClass="tool"
-          onMouseDown={ ev => addSelectedClass(ev.target) }
-          onMouseUp={ ev => removeSelectedClass(ev.target) }
-          onMouseMove={ ev => removeSelectedClass(ev.target) }
+          onMouseDown={ ev => props.addSelected(ev.target) }
+          onMouseUp={ ev => props.removeSelected(ev.target) }
+          onMouseMove={ ev => props.removeSelected(ev.target) }
           onClick={ ev => changeHistory(ev.target.id) }
         />
       </Bar>

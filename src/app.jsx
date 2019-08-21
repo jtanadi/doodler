@@ -17,11 +17,14 @@ class App extends Component {
       canvasHeight: 600,
       drawingTools,
       historyTools,
+      undoButton: {},
+      redoButton: {},
     };
     this.child = React.createRef();
 
     this.pickTool = this.pickTool.bind(this);
     this.routeKeyPress = this.routeKeyPress.bind(this);
+    this.routeKeyUp = this.routeKeyUp.bind(this);
     this.changeHistory = this.changeHistory.bind(this);
   }
 
@@ -33,10 +36,28 @@ class App extends Component {
       const selectedTool = Object.keys(drawingTools)[idx];
       this.pickTool(selectedTool);
     } else if (ev.key === "u") {
+      this.addSelectedClass(this.state.undoButton);
       this.changeHistory("undo");
     } else if (ev.key === "r") {
+      this.addSelectedClass(this.state.redoButton);
       this.changeHistory("redo");
     }
+  }
+
+  routeKeyUp(ev) {
+    if (ev.key === "u") {
+      this.removeSelectedClass(this.state.undoButton);
+    } else if (ev.key === "r") {
+      this.removeSelectedClass(this.state.redoButton);
+    }
+  }
+
+  addSelectedClass(target) {
+    target.classList.add("selected");
+  }
+
+  removeSelectedClass(target) {
+    target.classList.remove("selected");
   }
 
   pickTool(tool) {
@@ -53,15 +74,21 @@ class App extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener("keypress", this.routeKeyPress)
-
     const canvas = document.getElementById("canvas")
     const drawing = new Drawing(canvas)
-    this.setState({ drawing });
+
+    const undoButton = document.getElementById("undo")
+    const redoButton = document.getElementById("redo")
+
+    this.setState({ drawing, undoButton, redoButton });
+
+    document.addEventListener("keypress", this.routeKeyPress)
+    document.addEventListener("keyup", this.routeKeyUp)
   }
 
   componentWillUnmount() {
     document.removeEventListener("keypress", this.routeKeyPress)
+    document.removeEventListener("keyup", this.routeKeyUp)
   }
 
   render() {
@@ -82,6 +109,8 @@ class App extends Component {
           currentTool={ currentTool }
           pickTool={ this.pickTool }
           changeHistory={ this.changeHistory }
+          addSelected={ this.addSelectedClass }
+          removeSelected={ this.removeSelectedClass }
         />
         <Canvas
           drawing={ drawing }
