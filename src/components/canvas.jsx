@@ -6,8 +6,6 @@ class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: 400,
-      height: 500,
       mouseDown: false,
       startX: 0,
       startY: 0,
@@ -31,19 +29,19 @@ class Canvas extends Component {
     if (!mouseDown) return;
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
 
-    this.props.drawing.drawMarquee(startX, startY, x, y, this.props.selectedTool, "green");
+    this.props.drawing.drawMarquee(startX, startY, x, y, this.props.currentTool, "green");
   }
 
   handleMouseUp(ev) {
     const { startX, startY } = this.state;
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
 
-    this.props.drawing.createShape(startX, startY, x, y, this.props.selectedTool, "green");
+    this.props.drawing.createShape(startX, startY, x, y, this.props.currentTool, "green");
     this.setState({ mouseDown: false });
   }
 
   render() {
-    const { width, height } = this.state;
+    const { width, height } = this.props;
     return (
       <canvas
         id="canvas"

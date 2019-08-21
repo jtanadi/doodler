@@ -5,24 +5,18 @@ import Toolbar from "./components/toolbar.jsx";
 import Canvas from "./components/canvas.jsx";
 
 import Drawing from "./dwg/drawing.js";
-
-const TOOLS = {
-  "rect": "◻",
-  "ellipse": "◯",
-  "line": "|",
-}
-
-const HISTORY_TOOLS = {
-  "undo": "↶",
-  "redo": "↷",
-}
+import { drawingTools, historyTools } from "./dwg/tools.js"
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       drawing: {},
-      tool: "rect",
+      currentTool: "rect",
+      canvasWidth: 800,
+      canvasHeight: 600,
+      drawingTools,
+      historyTools,
     };
     this.child = React.createRef();
 
@@ -32,11 +26,12 @@ class App extends Component {
   }
 
   routeKeyPress(ev) {
+    const { drawingTools } = this.state
     const numKey = parseInt(ev.key);
-    if (numKey > 0 && numKey <= Object.keys(TOOLS).length) {
+    if (numKey > 0 && numKey <= Object.keys(drawingTools).length) {
       const idx = numKey - 1;
-      const tool = Object.keys(TOOLS)[idx];
-      this.pickTool(tool);
+      const selectedTool = Object.keys(drawingTools)[idx];
+      this.pickTool(selectedTool);
     } else if (ev.key === "u") {
       this.changeHistory("undo");
     } else if (ev.key === "r") {
@@ -45,7 +40,7 @@ class App extends Component {
   }
 
   pickTool(tool) {
-    this.setState({ tool });
+    this.setState({ currentTool: tool });
   }
 
   changeHistory(action) {
@@ -70,20 +65,29 @@ class App extends Component {
   }
 
   render() {
-    const { tool, drawing } = this.state;
+    const {
+      currentTool,
+      drawing,
+      canvasWidth,
+      canvasHeight,
+      drawingTools,
+      historyTools,
+    } = this.state;
+
     return (
       <div id="wrapper">
         <Toolbar
-          drawTools={ TOOLS }
-          historyTools= { HISTORY_TOOLS }
-          selectedTool={ tool }
+          drawingTools={ drawingTools }
+          historyTools= { historyTools }
+          currentTool={ currentTool }
           pickTool={ this.pickTool }
           changeHistory={ this.changeHistory }
         />
         <Canvas
           drawing={ drawing }
-          selectedTool={ tool }
-          ref={ this.child }
+          currentTool={ currentTool }
+          width={ canvasWidth }
+          height={ canvasHeight }
         />
       </div>
     );
