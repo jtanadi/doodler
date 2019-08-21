@@ -6,7 +6,16 @@ import Canvas from "./components/canvas.jsx";
 
 import Drawing from "./dwg/drawing.js";
 
-const TOOLS = ["rect", "ellipse", "line"];
+const TOOLS = {
+  "rect": "◻",
+  "ellipse": "◯",
+  "line": "|",
+}
+
+const HISTORY_TOOLS = {
+  "undo": "↶",
+  "redo": "↷",
+}
 
 class App extends Component {
   constructor() {
@@ -24,8 +33,10 @@ class App extends Component {
 
   routeKeyPress(ev) {
     const numKey = parseInt(ev.key);
-    if (numKey > 0 && numKey <= TOOLS.length) {
-      this.pickTool(TOOLS[numKey - 1]);
+    if (numKey > 0 && numKey <= Object.keys(TOOLS).length) {
+      const idx = numKey - 1;
+      const tool = Object.keys(TOOLS)[idx];
+      this.pickTool(tool);
     } else if (ev.key === "u") {
       this.changeHistory("undo");
     } else if (ev.key === "r") {
@@ -63,7 +74,8 @@ class App extends Component {
     return (
       <div id="wrapper">
         <Toolbar
-          tools={ TOOLS }
+          drawTools={ TOOLS }
+          historyTools= { HISTORY_TOOLS }
           selectedTool={ tool }
           pickTool={ this.pickTool }
           changeHistory={ this.changeHistory }
