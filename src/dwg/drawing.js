@@ -80,20 +80,16 @@ export default class Drawing {
     // Shape objects (path and SVG data) are saved in `this.shapes` stack and redrawn at every turn
     // x0, y0 is top left corner; x1, y1 is bottom right corner
 
-    let svg;
     const path = new Path2D();
     if (mode === "rect") {
       const [x, y, width, height] = drawMethods.rect(x0, y0, x1, y1, path);
-      svg = `<rect x="${x}" y="${y}" width="${width}" height="${height}" stroke="${stroke}" fill="${fill}"/>`;
     } else if (mode === "ellipse") {
       const [cx, cy, rx, ry] = drawMethods.ellipse(x0, y0, x1, y1, path);
-      svg = `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" stroke="${stroke}" fill="${fill}"/>`
     } else if (mode === "line") {
       drawMethods.line(x0, y0, x1, y1, path);
-      svg = `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${stroke}" fill="none"/>`;
     }
 
-    this.shapes.push({ path, mode, stroke, fill, svg });
+    this.shapes.push({ path, mode, stroke, fill });
     this.drawShapes();
     this.history.clear();
   }
@@ -143,12 +139,13 @@ export default class Drawing {
   }
 
   save() {
-    let xml = `<?xml version="1.0" encoding="UTF-8" ?>\n<svg width="${this.canvas.width}" height="${this.canvas.height}" xmlns="http://www.w3.org/2000/svg">\n`
+    return new Error("not yet implemented");
+    // let xml = `<?xml version="1.0" encoding="UTF-8" ?>\n<svg width="${this.canvas.width}" height="${this.canvas.height}" xmlns="http://www.w3.org/2000/svg">\n`
 
-    xml += this.shapes.map(shape => `  ${shape.svg}`).join("\n")
-    xml += "\n</svg>"
+    // xml += this.shapes.map(shape => `  ${shape.svg}`).join("\n")
+    // xml += "\n</svg>"
 
-    console.log(xml)
+    // console.log(xml)
   }
 
   undo() {
