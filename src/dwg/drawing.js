@@ -28,7 +28,7 @@ const drawMethods = {
     pathToDraw.ellipse(cx, cy, rx, ry, 0, 0, 2 * Math.PI);
 
     return [cx, cy, rx, ry];
-  }
+  },
 }
 
 export default class Drawing {
@@ -45,7 +45,6 @@ export default class Drawing {
     // Keep a shapes stack because they have to be redrawn often
     // (so they appear persistent) and so we can save an SVG file later
     this.shapes = [];
-
     this.history = new FixedCapStack(10);
   }
 
@@ -72,6 +71,7 @@ export default class Drawing {
 
     // Draw marquee
     this.context.strokeStyle = "gray";
+    this.context.lineWidth = 1;
     this.context.stroke(path);
   }
 
@@ -93,16 +93,47 @@ export default class Drawing {
       svg = `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${stroke}" fill="none"/>`;
     }
 
-    this.shapes.push({ path, stroke, svg });
+    this.shapes.push({ path, mode, stroke, fill, svg });
+    this.drawShapes();
+    this.history.clear();
+  }
+
+  createBrush(x0, y0, x1, y1, stroke="none", fill="none") {
+    const path = new Path2D();
+    drawMethods.line(x0, y0, x1, y1, path)
+    this.shapes.push({ path, mode: "brush", stroke, fill })
     this.drawShapes();
     this.history.clear();
   }
 
   drawShapes() {
+    // We should eventually move to the block below,
+    // where a single path object is passed in, and only
+    // that one is drawn
+
+    // if (stroke !== "none") {
+    //   this.context.strokeStyle = stroke;
+    //   this.context.stroke(path);
+    // } else if (fill !== "none") {
+    //   this.context.fillStyle = fill;
+    //   this.context.fill(path);
+    // }
+
+    // Currently, we have to clear and redraw all shapes
+    // because we need the marquee to refresh on mousemove
+    // (Marquee isn't part of shapes stack, so only current
+    // one will be drawn at each refresh)
     this.clear();
     this.shapes.forEach(shape => {
-      this.context.strokeStyle = shape.stroke;
-      this.context.stroke(shape.path);
+      if (shape.stroke !== "none") {
+        this.context.strokeStyle = shape.stroke;
+        this.context.lineWidth = (shape.mode === "brush") ? 10 : 1;
+        this.context.lineCap = "round";
+        this.context.stroke(shape.path);
+      } else if (shape.fill !== "none") {
+        this.context.fillStyle = shape.fill;
+        this.context.fill(shape.path);
+      }
     });
   }
 

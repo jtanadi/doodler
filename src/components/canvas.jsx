@@ -20,6 +20,10 @@ class Canvas extends Component {
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
     if (x < 0 || y < 0) return;
 
+    if (this.props.currentTool === "brush") {
+      this.props.drawing.createBrush(x, y, x, y, "green")
+    }
+
     this.setState({ mouseDown: true, startX: x, startY: y })
   }
 
@@ -29,7 +33,12 @@ class Canvas extends Component {
     if (!mouseDown) return;
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
 
-    this.props.drawing.drawMarquee(startX, startY, x, y, this.props.currentTool, "green");
+    if (this.props.currentTool === "brush") {
+      this.props.drawing.createBrush(startX, startY, x, y, "green")
+      this.setState({ startX: x, startY: y })
+    } else {
+      this.props.drawing.drawMarquee(startX, startY, x, y, this.props.currentTool, "green");
+    }
   }
 
   handleMouseUp(ev) {
