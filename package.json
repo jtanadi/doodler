@@ -8,15 +8,14 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "start": "parcel build src/index.html && node app.js",
-    "dev": "parcel src/index.html --out-dir dev/"
+    "start": "node .",
+    "dev": "parcel src/index.html --out-dir dev/",
+    "postinstall": "./node_modules/.bin/parcel build src/index.html"
   },
   "dependencies": {
     "express": "^4.17.1",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
-  },
-  "devDependencies": {
+    "react-dom": "^16.9.0",
     "parcel-bundler": "^1.12.3"
   }
 }
