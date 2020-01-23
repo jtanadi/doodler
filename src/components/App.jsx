@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-import Toolbar from "./toolbar";
 import Canvas from "./canvas";
 import ToolPalette from "./ToolPalette"
 
@@ -14,8 +13,8 @@ export default class App extends Component {
     this.state = {
       drawing: {},
       currentTool: "rect",
-      canvasWidth: 800,
-      canvasHeight: 600,
+      canvasWidth: 0,
+      canvasHeight: 0,
       drawingTools,
       historyTools,
       undoButton: {},
@@ -27,6 +26,7 @@ export default class App extends Component {
     this.routeKeyPress = this.routeKeyPress.bind(this);
     this.routeKeyUp = this.routeKeyUp.bind(this);
     this.changeHistory = this.changeHistory.bind(this);
+    this.updateCanvasSize = this.updateCanvasSize.bind(this)
   }
 
   routeKeyPress(ev) {
@@ -74,6 +74,13 @@ export default class App extends Component {
     }
   }
 
+  updateCanvasSize() {
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
+
+    this.setState({ canvasWidth, canvasHeight });
+  }
+
   componentDidMount() {
     const canvas = document.getElementById("canvas")
     const drawing = new Drawing(canvas)
@@ -81,15 +88,20 @@ export default class App extends Component {
     const undoButton = document.getElementById("undo")
     const redoButton = document.getElementById("redo")
 
-    this.setState({ drawing, undoButton, redoButton });
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
+
+    this.setState({ drawing, undoButton, redoButton, canvasWidth, canvasHeight });
 
     document.addEventListener("keypress", this.routeKeyPress)
     document.addEventListener("keyup", this.routeKeyUp)
+    window.addEventListener("resize", this.updateCanvasSize)
   }
 
   componentWillUnmount() {
     document.removeEventListener("keypress", this.routeKeyPress)
     document.removeEventListener("keyup", this.routeKeyUp)
+    window.removeEventListener("resize", this.updateCanvasSize)
   }
 
   render() {
@@ -104,8 +116,8 @@ export default class App extends Component {
 
     return (
       <div id="wrapper">
-        <ToolPalette />
-        <Toolbar
+        {/* <ToolPalette /> */}
+        <ToolPalette
           drawingTools={drawingTools}
           historyTools={historyTools}
           currentTool={currentTool}
