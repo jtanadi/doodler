@@ -20,15 +20,15 @@ export default function BarItems(props) {
 
       return (
         <div
-          key={ key }
-          className={ className }
-          id={ key }
-          onMouseDown={ onMouseDown }
-          onMouseUp={ onMouseUp }
-          onMouseLeave={ onMouseLeave }
-          onClick={ onClick }
+          key={key}
+          className={className}
+          id={key}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseLeave}
+          onClick={onClick}
         >
-          <span>{ items[key] }</span>
+          <span>{items[key]}</span>
         </div>
       )
     })
