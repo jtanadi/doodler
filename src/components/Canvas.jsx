@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 
-import Drawing from "../dwg/drawing.js";
-
 class Canvas extends Component {
   constructor(props) {
     super(props);
@@ -54,11 +52,11 @@ class Canvas extends Component {
     return (
       <canvas
         id="canvas"
-        onMouseDown={ this.handleMouseDown }
-        onMouseMove={ this.handleMouseMove }
-        onMouseUp={ this.handleMouseUp }
-        width={ `${width}px` }
-        height={ `${height}px` }
+        onMouseDown={this.handleMouseDown}
+        onMouseMove={this.handleMouseMove}
+        onMouseUp={this.handleMouseUp}
+        width={`${width}px`}
+        height={`${height}px`}
       >
       </canvas>
     );

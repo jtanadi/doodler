@@ -8,7 +8,6 @@
   height: 100vh;
   display: flex;
   align-items: center;
-  background-color: lightgray;
 }
 
 #wrapper {
@@ -72,11 +71,6 @@
 }
 
 #canvas {
-  border: 1px solid green;
-  border-radius: 0.35rem;
-}
-
-#toolbar-container, #canvas {
   background-color: lightgray;
 }
 

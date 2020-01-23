@@ -1,20 +1,20 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 
-import Toolbar from "./components/toolbar.jsx";
-import Canvas from "./components/canvas.jsx";
+import Canvas from "./Canvas";
+import ToolPalette from "./ToolPalette"
 
-import Drawing from "./dwg/drawing.js";
-import { drawingTools, historyTools } from "./dwg/tools.js"
+import Drawing from "../dwg/drawing.js";
+import { drawingTools, historyTools } from "../dwg/tools.js"
 
-class App extends Component {
+
+export default class App extends Component {
   constructor() {
     super();
     this.state = {
       drawing: {},
       currentTool: "rect",
-      canvasWidth: 800,
-      canvasHeight: 600,
+      canvasWidth: 0,
+      canvasHeight: 0,
       drawingTools,
       historyTools,
       undoButton: {},
@@ -26,6 +26,7 @@ class App extends Component {
     this.routeKeyPress = this.routeKeyPress.bind(this);
     this.routeKeyUp = this.routeKeyUp.bind(this);
     this.changeHistory = this.changeHistory.bind(this);
+    this.updateCanvasSize = this.updateCanvasSize.bind(this)
   }
 
   routeKeyPress(ev) {
@@ -73,6 +74,13 @@ class App extends Component {
     }
   }
 
+  updateCanvasSize() {
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
+
+    this.setState({ canvasWidth, canvasHeight });
+  }
+
   componentDidMount() {
     const canvas = document.getElementById("canvas")
     const drawing = new Drawing(canvas)
@@ -80,15 +88,20 @@ class App extends Component {
     const undoButton = document.getElementById("undo")
     const redoButton = document.getElementById("redo")
 
-    this.setState({ drawing, undoButton, redoButton });
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
+
+    this.setState({ drawing, undoButton, redoButton, canvasWidth, canvasHeight });
 
     document.addEventListener("keypress", this.routeKeyPress)
     document.addEventListener("keyup", this.routeKeyUp)
+    window.addEventListener("resize", this.updateCanvasSize)
   }
 
   componentWillUnmount() {
     document.removeEventListener("keypress", this.routeKeyPress)
     document.removeEventListener("keyup", this.routeKeyUp)
+    window.removeEventListener("resize", this.updateCanvasSize)
   }
 
   render() {
@@ -103,26 +116,24 @@ class App extends Component {
 
     return (
       <div id="wrapper">
-        <Toolbar
-          drawingTools={ drawingTools }
-          historyTools= { historyTools }
-          currentTool={ currentTool }
-          pickTool={ this.pickTool }
-          changeHistory={ this.changeHistory }
-          addSelected={ this.addSelectedClass }
-          removeSelected={ this.removeSelectedClass }
+        {/* <ToolPalette /> */}
+        <ToolPalette
+          drawingTools={drawingTools}
+          historyTools={historyTools}
+          currentTool={currentTool}
+          pickTool={this.pickTool}
+          changeHistory={this.changeHistory}
+          addSelected={this.addSelectedClass}
+          removeSelected={this.removeSelectedClass}
         />
         <Canvas
-          drawing={ drawing }
-          currentTool={ currentTool }
-          width={ canvasWidth }
-          height={ canvasHeight }
+          drawing={drawing}
+          currentTool={currentTool}
+          width={canvasWidth}
+          height={canvasHeight}
         />
       </div>
     );
   }
 }
-
-const root = document.getElementById("root");
-ReactDOM.render(<App />, root);
 
