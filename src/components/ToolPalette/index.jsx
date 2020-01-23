@@ -8,8 +8,19 @@ import {
 
 import ToolButton from "../ToolButton"
 import ToolPaletteBar from "../ToolPaletteBar"
+import BarItems from "../barItems"
 
-export default function ToolPalette() {
+export default function ToolPalette(props) {
+  const {
+    drawingTools,
+    historyTools,
+    currentTool,
+    pickTool,
+    changeHistory,
+    addSelected,
+    removeSelected,
+  } = props;
+
   const [open, setOpen] = useState(true)
   const handleClick = () => {
     setOpen(prevState => !prevState)
@@ -21,10 +32,22 @@ export default function ToolPalette() {
         <ToolPaletteBar onClick={handleClick} />
 
         <StyledButtonContainer>
-          <ToolButton />
-          <ToolButton />
-          <ToolButton />
-          <ToolButton />
+          <BarItems
+            items={drawingTools}
+            selectedItem={currentTool}
+            itemClass="tool"
+            onClick={ev => pickTool(ev.target.id)}
+          />
+        </StyledButtonContainer>
+        <StyledButtonContainer>
+          <BarItems
+            items={historyTools}
+            itemClass="tool"
+            onMouseDown={ev => props.addSelected(ev.target)}
+            onMouseUp={ev => props.removeSelected(ev.target)}
+            onMouseMove={ev => props.removeSelected(ev.target)}
+            onClick={ev => changeHistory(ev.target.id)}
+          />
         </StyledButtonContainer>
       </StyledPalette>
     </Draggable>
