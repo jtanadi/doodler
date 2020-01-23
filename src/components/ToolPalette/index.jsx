@@ -8,7 +8,7 @@ import {
 
 import ToolButton from "../ToolButton"
 import ToolPaletteBar from "../ToolPaletteBar"
-import BarItems from "../barItems"
+import BarItems from "../BarItems"
 
 export default function ToolPalette(props) {
   const {
