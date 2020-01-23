@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import Canvas from "./canvas";
+import Canvas from "./Canvas";
 import ToolPalette from "./ToolPalette"
 
 import Drawing from "../dwg/drawing.js";
