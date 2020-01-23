@@ -3,23 +3,23 @@ import styled, { css } from "styled-components"
 const StyledBar = styled.div`
   width: 100%;
   height: 1.75rem;
-  background-color: gray;
   position: absolute;
   top: 0;
   left: 0;
+  border-bottom: 1px solid green;
   cursor: grabbing;
 `
 
 const StyledMinimizeBtn = styled.button`
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
   position: absolute;
   padding: none;
-  text-align: center;
-  top: 0.25rem;
-  left: 0.25rem;
-  border: 0;
-  background-color: yellow;
+  top: calc((1.75rem - 1rem) / 2) ;
+  left: calc((1.75rem - 1rem) / 2) ;
+  background-color: green;
+  border: none;
+  border-radius: 0.5rem;
 `
 
 export { StyledBar, StyledMinimizeBtn }
