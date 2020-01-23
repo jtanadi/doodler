@@ -15,9 +15,14 @@
   "dependencies": {
     "express": "^4.17.1",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react-dom": "^16.9.0",
+    "react-draggable": "^4.2.0",
+    "styled-components": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.8.3",
+    "@babel/preset-react": "^7.8.3",
+    "babel-plugin-styled-components": "^1.10.6",
     "parcel-bundler": "^1.12.3"
   }
 }
