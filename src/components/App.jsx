@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 
-import Toolbar from "./components/toolbar.jsx";
-import Canvas from "./components/canvas.jsx";
+import Toolbar from "./toolbar";
+import Canvas from "./canvas";
+import ToolPalette from "./ToolPalette"
 
-import Drawing from "./dwg/drawing.js";
-import { drawingTools, historyTools } from "./dwg/tools.js"
+import Drawing from "../dwg/drawing.js";
+import { drawingTools, historyTools } from "../dwg/tools.js"
 
-class App extends Component {
+
+export default class App extends Component {
   constructor() {
     super();
     this.state = {
@@ -103,26 +104,24 @@ class App extends Component {
 
     return (
       <div id="wrapper">
+        <ToolPalette />
         <Toolbar
-          drawingTools={ drawingTools }
-          historyTools= { historyTools }
-          currentTool={ currentTool }
-          pickTool={ this.pickTool }
-          changeHistory={ this.changeHistory }
-          addSelected={ this.addSelectedClass }
-          removeSelected={ this.removeSelectedClass }
+          drawingTools={drawingTools}
+          historyTools={historyTools}
+          currentTool={currentTool}
+          pickTool={this.pickTool}
+          changeHistory={this.changeHistory}
+          addSelected={this.addSelectedClass}
+          removeSelected={this.removeSelectedClass}
         />
         <Canvas
-          drawing={ drawing }
-          currentTool={ currentTool }
-          width={ canvasWidth }
-          height={ canvasHeight }
+          drawing={drawing}
+          currentTool={currentTool}
+          width={canvasWidth}
+          height={canvasHeight}
         />
       </div>
     );
   }
 }
-
-const root = document.getElementById("root");
-ReactDOM.render(<App />, root);
 
