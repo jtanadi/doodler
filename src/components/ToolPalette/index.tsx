@@ -4,9 +4,9 @@ import Draggable from "react-draggable"
 import { StyledPalette } from "./styles"
 import { drawingTools } from "../../utils/tools"
 
-import ToolButton from "../ToolButton/index"
-import ToolPaletteBar from "../ToolPaletteBar/index"
-import ToolButtonsContainer from "../ToolButtonsContainer/index"
+import ToolButton from "../ToolButton"
+import ToolPaletteBar from "../ToolPaletteBar"
+import ToolButtonsContainer from "../ToolButtonsContainer"
 
 type PropTypes = {
   currentTool: string

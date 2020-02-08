@@ -11,7 +11,7 @@ export default class App extends Component {
     super()
     this.state = {
       drawing: {},
-      currentTool: "rect",
+      currentTool: "rectangle",
       canvasWidth: 0,
       canvasHeight: 0,
       drawingTools,
