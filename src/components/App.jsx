@@ -4,8 +4,7 @@ import Gambar from "gambar"
 import Canvas from "./Canvas"
 import ToolPalette from "./ToolPalette"
 
-import Drawing from "../dwg/drawing.js"
-import { drawingTools, historyTools } from "../dwg/tools.js"
+import { drawingTools } from "../utils/tools.js"
 
 export default class App extends Component {
   constructor() {
@@ -16,9 +15,6 @@ export default class App extends Component {
       canvasWidth: 0,
       canvasHeight: 0,
       drawingTools,
-      historyTools,
-      undoButton: {},
-      redoButton: {},
     }
     this.child = React.createRef()
 
@@ -37,11 +33,9 @@ export default class App extends Component {
       const selectedTool = Object.keys(drawingTools)[idx]
       this.pickTool(selectedTool)
     } else if (ev.key === "u") {
-      this.addSelectedClass(this.state.undoButton)
-      this.changeHistory("undo")
+      console.log("u")
     } else if (ev.key === "r") {
-      this.addSelectedClass(this.state.redoButton)
-      this.changeHistory("redo")
+      console.log("r")
     }
   }
 
@@ -66,12 +60,7 @@ export default class App extends Component {
   }
 
   changeHistory(action) {
-    const { drawing } = this.state
-    if (action === "undo") {
-      drawing.undo()
-    } else if (action === "redo") {
-      drawing.redo()
-    }
+    console.log("history", action)
   }
 
   updateCanvasSize() {
@@ -83,32 +72,26 @@ export default class App extends Component {
 
   componentDidMount() {
     const canvas = document.getElementById("canvas")
-    const drawing = new Drawing(canvas)
-    const gambar = new Gambar(canvas)
-
-    const undoButton = document.getElementById("undo")
-    const redoButton = document.getElementById("redo")
+    const drawing = new Gambar(canvas)
 
     const canvasWidth = window.innerWidth
     const canvasHeight = window.innerHeight
 
     this.setState({
       drawing,
-      undoButton,
-      redoButton,
       canvasWidth,
       canvasHeight,
     })
 
     document.addEventListener("keypress", this.routeKeyPress)
     document.addEventListener("keyup", this.routeKeyUp)
-    window.addEventListener("resize", this.updateCanvasSize)
+    // window.addEventListener("resize", this.updateCanvasSize)
   }
 
   componentWillUnmount() {
     document.removeEventListener("keypress", this.routeKeyPress)
     document.removeEventListener("keyup", this.routeKeyUp)
-    window.removeEventListener("resize", this.updateCanvasSize)
+    // window.removeEventListener("resize", this.updateCanvasSize)
   }
 
   render() {
@@ -118,15 +101,12 @@ export default class App extends Component {
       canvasWidth,
       canvasHeight,
       drawingTools,
-      historyTools,
     } = this.state
 
     return (
       <div id="wrapper">
-        {/* <ToolPalette /> */}
         <ToolPalette
           drawingTools={drawingTools}
-          historyTools={historyTools}
           currentTool={currentTool}
           pickTool={this.pickTool}
           changeHistory={this.changeHistory}
