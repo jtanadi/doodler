@@ -8,15 +8,15 @@
 // }
 
 const drawingTools = {
-  "rect": "1",
-  "ellipse": "2",
-  "line": "3",
-  "brush": "4",
+  rectangle: "1",
+  ellipse: "2",
+  line: "3",
+  brush: "4",
 }
 
 const historyTools = {
-  "undo": "↶",
-  "redo": "↷",
+  undo: "↶",
+  redo: "↷",
 }
 
 export { drawingTools, historyTools }

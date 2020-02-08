@@ -24,21 +24,22 @@ function svgToPaths(svgs) {
   // svgs is an array
   // [<line.../>, <rect.../>, <ellipse.../>]
   return svgs.map(svg => {
-    const path = new Path2D();
-    const properties = svg
-      .split(" ")
-      .filter(prop => {
-        return prop && prop !== "/>"
-          && !prop.includes("stroke")
-          && !prop.includes("fill")
-          && !prop.includes("color")
-      })
+    const path = new Path2D()
+    const properties = svg.split(" ").filter(prop => {
+      return (
+        prop &&
+        prop !== "/>" &&
+        !prop.includes("stroke") &&
+        !prop.includes("fill") &&
+        !prop.includes("color")
+      )
+    })
 
     let shape = properties.shift()
     shape = shape.slice(1, shape.length)
 
     if (shape === "rect") {
-      let [x, y, width, height] = properties;
+      let [x, y, width, height] = properties
       x = getValue(x)
       y = getValue(y)
       width = getValue(width)
@@ -68,9 +69,10 @@ function svgToPaths(svgs) {
 }
 
 function getValue(property) {
-  return parseInt(property
-    .split("=")
-    .pop()
-    .split('"')[1]
+  return parseInt(
+    property
+      .split("=")
+      .pop()
+      .split('"')[1]
   )
 }
