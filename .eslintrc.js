@@ -27,5 +27,14 @@ module.exports = {
   plugins: ["react", "@typescript-eslint", "prettier"],
   rules: {
     "react/prop-types": 0,
+    "@typescript-eslint/explicit-function-return-type": 0,
   },
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx"],
+      rules: {
+        "@typescript-eslint/explicit-function-return-type": ["error"],
+      },
+    },
+  ],
 }
