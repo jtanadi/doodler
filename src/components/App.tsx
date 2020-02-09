@@ -16,6 +16,8 @@ const boundingBoxStyle = {
   },
 }
 
+const HISTORY = []
+
 const App: React.FC<{}> = (): ReactElement => {
   const canvasRef = useRef(null)
   const [drawing, setDrawing] = useState<Gambar | null>(null)
@@ -44,18 +46,30 @@ const App: React.FC<{}> = (): ReactElement => {
   }, [canvasWidth, canvasHeight])
 
   const [currentTool, setCurrentTool] = useState("selection")
-  const pickTool = (type: string): void => {
+  const handlePickTool = (type: string): void => {
     setCurrentTool(type)
   }
 
-  const changeHistory = (): void => {}
+  const handleChangeHistory = (type: string): void => {
+    if (type === "undo") {
+      const shape = drawing.popShape()
+      if (shape) {
+        HISTORY.push(shape)
+      }
+    } else if (type === "redo") {
+      const shape = HISTORY.pop()
+      if (shape) {
+        drawing.pushShape(shape)
+      }
+    }
+  }
 
   return (
     <div id="wrapper">
       <ToolPalette
         currentTool={currentTool}
-        pickTool={pickTool}
-        changeHistory={changeHistory}
+        pickTool={handlePickTool}
+        changeHistory={handleChangeHistory}
       />
       <Canvas
         drawing={drawing}
