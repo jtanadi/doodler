@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, SyntheticEvent, RefObject } from "react"
+import React, { useState, ReactElement, MouseEvent, RefObject } from "react"
 import Gambar from "gambar"
 import { Point, StyleProps } from "gambar/src/geometry"
 
@@ -25,7 +25,7 @@ const Canvas: React.FC<PropTypes> = ({
 
   const [shapesSelected, setShapesSelected] = useState(false)
 
-  const handleMouseDown = (ev: SyntheticEvent): void => {
+  const handleMouseDown = (ev: MouseEvent): void => {
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
     if (x < 0 || y < 0) return
 
@@ -41,7 +41,7 @@ const Canvas: React.FC<PropTypes> = ({
     setEndPoint(pt)
   }
 
-  const handleMouseMove = (ev: SyntheticEvent): void => {
+  const handleMouseMove = (ev: MouseEvent): void => {
     if (!mouseDown) return
 
     setEndPoint(new Point(ev.nativeEvent.offsetX, ev.nativeEvent.offsetY))
