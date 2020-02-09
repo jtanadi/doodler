@@ -1,10 +1,76 @@
-import React, { Component } from "react"
+import React, { useState, useEffect, useRef, ReactElement } from "react"
 import Gambar from "gambar"
 
 import Canvas from "./Canvas"
 import ToolPalette from "./ToolPalette"
 
-import { drawingTools } from "../utils/tools.js"
+const boundingBoxStyle = {
+  edgeStyle: {
+    strokeColor: "#0D98BA",
+    strokeWidth: 2,
+  },
+  nodeStyle: {
+    strokeColor: "black",
+    strokeWidth: 1,
+    fillColor: "white",
+  },
+}
+
+const App: React.FC<{}> = (): ReactElement => {
+  const canvasRef = useRef(null)
+  const [drawing, setDrawing] = useState<Gambar | null>(null)
+  const [canvasWidth, setCanvasWidth] = useState(0)
+  const [canvasHeight, setCanvasHeight] = useState(0)
+
+  const resizeCanvas = (): void => {
+    setCanvasWidth(window.innerWidth)
+    setCanvasHeight(window.innerHeight)
+  }
+
+  useEffect(() => {
+    resizeCanvas()
+    // document.addEventListener("keypress", this.routeKeyPress)
+    // document.addEventListener("keyup", this.routeKeyUp)
+    // window.addEventListener("resize", resizeCanvas)
+
+    // return (): void => {
+    //   window.removeEventListener("resize", resizeCanvas)
+    // }
+  }, [])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    setDrawing(new Gambar(canvas, boundingBoxStyle))
+  }, [canvasWidth, canvasHeight])
+
+  const [currentTool, setCurrentTool] = useState("selection")
+  const pickTool = (type: string): void => {
+    setCurrentTool(type)
+  }
+
+  const changeHistory = (): void => {}
+
+  return (
+    <div id="wrapper">
+      <ToolPalette
+        currentTool={currentTool}
+        pickTool={pickTool}
+        changeHistory={changeHistory}
+      />
+      <Canvas
+        drawing={drawing}
+        currentTool={currentTool}
+        width={canvasWidth}
+        height={canvasHeight}
+        canvasRef={canvasRef}
+      />
+    </div>
+  )
+}
+
+export default App
+
+/*
 
 export default class App extends Component {
   constructor() {
@@ -123,3 +189,4 @@ export default class App extends Component {
     )
   }
 }
+*/
