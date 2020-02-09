@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node .",
     "dev": "parcel src/index.html --out-dir dev/",
+    "dev:reset": "rm -rf .cache && npm run dev",
     "postinstall": "./node_modules/.bin/parcel build src/index.html --public-url ./"
   },
   "dependencies": {
