@@ -66,12 +66,21 @@ const App: React.FC<{}> = (): ReactElement => {
     }
   }
 
+  const handleChangeLayerOrder = (type: ToolTypes): void => {
+    if (type === ToolTypes.PUSH_BACKWARD) {
+      drawing.pushSelectedShapesBackward()
+    } else if (type === ToolTypes.PULL_FORWARD) {
+      drawing.pullSelectedShapesForward()
+    }
+  }
+
   return (
     <div id="wrapper">
       <ToolPalette
         currentTool={currentTool}
         pickTool={handlePickTool}
         changeHistory={handleChangeHistory}
+        changeLayerOrder={handleChangeLayerOrder}
       />
       <Canvas
         drawing={drawing}

@@ -70,4 +70,4 @@ const layerTools: Tool[] = [
   },
 ]
 
-export { ToolTypes, Tool, drawingTools, historyTools }
+export { ToolTypes, Tool, drawingTools, historyTools, layerTools }
