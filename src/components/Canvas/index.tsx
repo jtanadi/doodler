@@ -56,6 +56,8 @@ const Canvas: React.FC<PropTypes> = ({
   const [startPoint, setStartPoint] = useState(new Point(0, 0))
   const [endPoint, setEndPoint] = useState(new Point(0, 0))
 
+  const [shapesSelected, setShapesSelected] = useState(false)
+
   const handleMouseDown = (ev: SyntheticEvent): void => {
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
     if (x < 0 || y < 0) return
@@ -64,7 +66,8 @@ const Canvas: React.FC<PropTypes> = ({
 
     setMouseDown(true)
     if (currentTool === "selection") {
-      drawing.selectShapeAtPoint(pt)
+      const selectedShape = drawing.selectShapeAtPoint(pt)
+      setShapesSelected(!!selectedShape)
     }
 
     setStartPoint(pt)
@@ -73,18 +76,36 @@ const Canvas: React.FC<PropTypes> = ({
 
   const handleMouseMove = (ev: SyntheticEvent): void => {
     if (!mouseDown) return
+
     setEndPoint(new Point(ev.nativeEvent.offsetX, ev.nativeEvent.offsetY))
 
-    const marqueeStyle = {
-      strokeColor: "gray",
-      strokeWidth: 1,
-    }
+    if (currentTool === "selection" && shapesSelected) {
+      const delta = new Point(
+        endPoint.x - startPoint.x,
+        endPoint.y - startPoint.y
+      )
 
-    drawShapes(drawing, currentTool, startPoint, endPoint, marqueeStyle, false)
+      drawing.moveSelectedShapes(delta)
+      setStartPoint(endPoint)
+    } else {
+      const marqueeStyle: StyleProps = {
+        strokeColor: "gray",
+        strokeWidth: 1,
+      }
+
+      drawShapes(
+        drawing,
+        currentTool,
+        startPoint,
+        endPoint,
+        marqueeStyle,
+        false
+      )
+    }
   }
 
   const handleMouseUp = (): void => {
-    const drawingStyle = {
+    const drawingStyle: StyleProps = {
       strokeColor: "green",
       strokeWidth: 1,
       fillColor: "white",
