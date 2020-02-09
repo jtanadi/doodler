@@ -5,8 +5,8 @@ const StyledContainer = styled.div`
   width: 5rem;
   margin: 1.9rem auto 0 auto;
   border: 1px solid black;
-  &:nth-child(3) {
-    margin: 0.25rem auto 1rem auto;
+  &:nth-child(n + 3) {
+    margin-top: 0.25rem;
   }
 `
 
