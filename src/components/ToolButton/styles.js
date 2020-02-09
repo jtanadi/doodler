@@ -14,6 +14,7 @@ const StyledToolButton = styled.button`
   &:last-child,
   &:nth-last-child(2) {
     border-bottom: 0;
+    height: calc(2.5rem - 1px);
   }
 
   ${props =>
