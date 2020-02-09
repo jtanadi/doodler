@@ -3,12 +3,12 @@ import React, { ReactElement } from "react"
 import { StyledContainer } from "./styles"
 
 import ToolButton from "../ToolButton"
-import { Tool } from "../../utils/"
+import { Tool, ToolTypes } from "../../utils/"
 
 type PropTypes = {
   tools: Tool[]
   currentTool?: string
-  handleButton(type?: string): void
+  handleButton(type?: ToolTypes): void
 }
 
 const ToolButtonsContainer: React.FC<PropTypes> = ({
