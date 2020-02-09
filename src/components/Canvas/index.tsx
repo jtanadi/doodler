@@ -1,15 +1,52 @@
-import React, { useState, ReactElement, SyntheticEvent } from "react"
+import React, { useState, ReactElement, SyntheticEvent, RefObject } from "react"
+import Gambar from "gambar"
+import { Point, StyleProps } from "gambar/src/geometry"
 
-import { Point } from "gambar/src/geometry"
+import { getDiamondPoints } from "../../utils/getShapePoints"
 
 type PropTypes = {
-  drawing: any
+  canvasRef: RefObject<HTMLCanvasElement>
+  drawing: Gambar
   currentTool: string
   width: number
   height: number
 }
 
+const drawShapes = (
+  dwg: Gambar,
+  type: string,
+  start: Point,
+  end: Point,
+  style: StyleProps,
+  save: boolean
+): void => {
+  switch (type) {
+    case "selection":
+      if (!save) {
+        dwg.rectangle(start, end, { fillColor: "rgba(0, 0, 0, 0.25)" }, save)
+      } else {
+        dwg.render()
+      }
+      break
+    case "rectangle":
+      dwg.rectangle(start, end, style, save)
+      break
+    case "ellipse":
+      dwg.ellipse(start, end, style, save)
+      break
+    case "line":
+      dwg.line(start, end, style, save)
+      break
+    case "diamond": {
+      const diamondPts: Point[] = getDiamondPoints(start, end)
+      dwg.polygon(diamondPts, style, save)
+      break
+    }
+  }
+}
+
 const Canvas: React.FC<PropTypes> = ({
+  canvasRef,
   drawing,
   currentTool,
   width,
@@ -26,6 +63,10 @@ const Canvas: React.FC<PropTypes> = ({
     const pt = new Point(x, y)
 
     setMouseDown(true)
+    if (currentTool === "selection") {
+      drawing.selectShapeAtPoint(pt)
+    }
+
     setStartPoint(pt)
     setEndPoint(pt)
   }
@@ -39,28 +80,17 @@ const Canvas: React.FC<PropTypes> = ({
       strokeWidth: 1,
     }
 
-    switch (currentTool) {
-      case "rectangle":
-        drawing.rectangle(startPoint, endPoint, marqueeStyle, false)
-        break
-      default:
-        return
-    }
+    drawShapes(drawing, currentTool, startPoint, endPoint, marqueeStyle, false)
   }
 
   const handleMouseUp = (): void => {
     const drawingStyle = {
       strokeColor: "green",
       strokeWidth: 1,
+      fillColor: "white",
     }
 
-    switch (currentTool) {
-      case "rectangle":
-        drawing.rectangle(startPoint, endPoint, drawingStyle)
-        break
-      default:
-        return
-    }
+    drawShapes(drawing, currentTool, startPoint, endPoint, drawingStyle, true)
 
     setMouseDown(false)
     setStartPoint(new Point(0, 0))
@@ -70,6 +100,7 @@ const Canvas: React.FC<PropTypes> = ({
   return (
     <canvas
       id="canvas"
+      ref={canvasRef}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
