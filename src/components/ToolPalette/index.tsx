@@ -2,15 +2,14 @@ import React, { useState, ReactElement } from "react"
 import Draggable from "react-draggable"
 
 import { StyledPalette } from "./styles"
-import { drawingTools } from "../../utils/tools"
+import { Tool, drawingTools, historyTools } from "../../utils/tools"
 
-import ToolButton from "../ToolButton"
 import ToolPaletteBar from "../ToolPaletteBar"
 import ToolButtonsContainer from "../ToolButtonsContainer"
 
 type PropTypes = {
   currentTool: string
-  pickTool(id: string): void
+  pickTool(type: string): void
   changeHistory(): void
 }
 
@@ -26,17 +25,20 @@ const ToolPalette: React.FC<PropTypes> = ({
 
   return (
     <Draggable handle=".palette-bar" bounds="body">
-      <StyledPalette open={open} numOfTools={drawingTools.length - 1}>
+      <StyledPalette
+        open={open}
+        numOfTools={drawingTools.length - 1 + historyTools.length - 1}
+      >
         <ToolPaletteBar onClick={handleClick} />
-
-        <ToolButtonsContainer>
-          {drawingTools.map((tool, i) =>
-            // 0th tool is null
-            i > 0 ? (
-              <ToolButton key={i} icon={tool.icon} pickTool={pickTool} />
-            ) : null
-          )}
-        </ToolButtonsContainer>
+        <ToolButtonsContainer
+          tools={drawingTools}
+          currentTool={currentTool}
+          handleButton={pickTool}
+        />
+        <ToolButtonsContainer
+          tools={historyTools}
+          handleButton={changeHistory}
+        />
       </StyledPalette>
     </Draggable>
   )

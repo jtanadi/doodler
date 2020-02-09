@@ -1,18 +1,25 @@
-import React, { ReactElement, SyntheticEvent } from "react"
+import React, { ReactElement } from "react"
 
 import StyledToolButton from "./styles"
+import { Tool } from "../../utils/tools"
 
 type PropTypes = {
-  icon: string
-  pickTool(id: string): void
+  tool: Tool
+  currentTool?: string
+  handleButton(type?: string): void
 }
 
-const ToolButton: React.FC<PropTypes> = ({ icon, pickTool }): ReactElement => {
+const ToolButton: React.FC<PropTypes> = ({
+  tool,
+  currentTool,
+  handleButton,
+}): ReactElement => {
   return (
     <StyledToolButton
-      onClick={(e: SyntheticEvent): void => pickTool(e.currentTarget.id)}
+      onClick={(): void => handleButton(tool.type)}
+      selected={tool.type === currentTool}
     >
-      <span>{icon}</span>
+      <span>{tool.icon}</span>
     </StyledToolButton>
   )
 }

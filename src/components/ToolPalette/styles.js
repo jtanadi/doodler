@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components"
 
 const StyledPalette = styled.div`
-  width: 3.45rem;
-  height: ${props => props.numOfTools * 2.5 + 2.6}rem;
+  width: 5.95rem;
+  height: ${props => (props.numOfTools * 2.5) / 2 + 3}rem;
   position: fixed;
   top: 3rem;
   left: 3rem;
