@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react"
 
 import StyledToolButton from "./styles"
-import { Tool } from "../../utils/tools"
+import { Tool } from "../../utils/"
 
 type PropTypes = {
   tool: Tool

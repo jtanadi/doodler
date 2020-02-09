@@ -3,7 +3,7 @@ import React, { ReactElement } from "react"
 import { StyledContainer } from "./styles"
 
 import ToolButton from "../ToolButton"
-import { Tool } from "../../utils/tools"
+import { Tool } from "../../utils/"
 
 type PropTypes = {
   tools: Tool[]
