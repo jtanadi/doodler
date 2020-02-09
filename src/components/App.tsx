@@ -85,6 +85,8 @@ const App: React.FC<{}> = (): ReactElement => {
 export default App
 
 /*
+OLD IMPLEMENTATION
+KEEP FOR REFERENCE (FOR NOW)
 
 export default class App extends Component {
   constructor() {
