@@ -4,6 +4,8 @@ import Gambar from "gambar"
 import Canvas from "./Canvas"
 import ToolPalette from "./ToolPalette"
 
+import { ToolTypes } from "../utils"
+
 const boundingBoxStyle = {
   edgeStyle: {
     strokeColor: "#0D98BA",
@@ -45,18 +47,18 @@ const App: React.FC<{}> = (): ReactElement => {
     setDrawing(new Gambar(canvas, boundingBoxStyle))
   }, [canvasWidth, canvasHeight])
 
-  const [currentTool, setCurrentTool] = useState("selection")
-  const handlePickTool = (type: string): void => {
+  const [currentTool, setCurrentTool] = useState(ToolTypes.SELECTION)
+  const handlePickTool = (type: ToolTypes): void => {
     setCurrentTool(type)
   }
 
-  const handleChangeHistory = (type: string): void => {
-    if (type === "undo") {
+  const handleChangeHistory = (type: ToolTypes): void => {
+    if (type === ToolTypes.UNDO) {
       const shape = drawing.popShape()
       if (shape) {
         HISTORY.push(shape)
       }
-    } else if (type === "redo") {
+    } else if (type === ToolTypes.REDO) {
       const shape = HISTORY.pop()
       if (shape) {
         drawing.pushShape(shape)

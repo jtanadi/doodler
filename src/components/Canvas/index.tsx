@@ -2,12 +2,12 @@ import React, { useState, ReactElement, SyntheticEvent, RefObject } from "react"
 import Gambar from "gambar"
 import { Point, StyleProps } from "gambar/src/geometry"
 
-import { drawShapes } from "../../utils/"
+import { ToolTypes, drawShapes } from "../../utils/"
 
 type PropTypes = {
   canvasRef: RefObject<HTMLCanvasElement>
   drawing: Gambar
-  currentTool: string
+  currentTool: ToolTypes
   width: number
   height: number
 }
@@ -32,7 +32,7 @@ const Canvas: React.FC<PropTypes> = ({
     const pt = new Point(x, y)
 
     setMouseDown(true)
-    if (currentTool === "selection") {
+    if (currentTool === ToolTypes.SELECTION) {
       const selectedShape = drawing.selectShapeAtPoint(pt)
       setShapesSelected(!!selectedShape)
     }
@@ -46,7 +46,7 @@ const Canvas: React.FC<PropTypes> = ({
 
     setEndPoint(new Point(ev.nativeEvent.offsetX, ev.nativeEvent.offsetY))
 
-    if (currentTool === "selection" && shapesSelected) {
+    if (currentTool === ToolTypes.SELECTION && shapesSelected) {
       const delta = new Point(
         endPoint.x - startPoint.x,
         endPoint.y - startPoint.y

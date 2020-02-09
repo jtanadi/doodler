@@ -1,16 +1,16 @@
 import React, { useState, ReactElement } from "react"
 import Draggable from "react-draggable"
 
-import { StyledPalette } from "./styles"
-import { drawingTools, historyTools } from "../../utils/tools"
-
 import ToolPaletteBar from "../ToolPaletteBar"
 import ToolButtonsContainer from "../ToolButtonsContainer"
 
+import { StyledPalette } from "./styles"
+import { ToolTypes, drawingTools, historyTools } from "../../utils/tools"
+
 type PropTypes = {
-  currentTool: string
-  pickTool(type: string): void
-  changeHistory(type: string): void
+  currentTool: ToolTypes
+  pickTool(type: ToolTypes): void
+  changeHistory(type: ToolTypes): void
 }
 
 const ToolPalette: React.FC<PropTypes> = ({
