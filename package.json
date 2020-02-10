@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "gambar": "github:jtanadi/gambar#master",
     "react": "^16.9.0",
+    "react-color": "^2.18.0",
     "react-dom": "^16.9.0",
     "react-draggable": "^4.2.0",
     "styled-components": "^5.0.1"
