@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, ReactElement } from "react"
 import Gambar from "gambar"
+import { Shape } from "gambar/src/geometry"
 
 import Canvas from "./Canvas"
 import ToolPalette from "./ToolPalette"
@@ -74,6 +75,70 @@ const App: React.FC<{}> = (): ReactElement => {
     }
   }
 
+  const [selectedShapes, setSelectedShapes] = useState<[Shape, number][]>([])
+
+  const [appFillColor, setAppFillColor] = useState("white")
+  const [appStrokeColor, setAppStrokeColor] = useState("black")
+
+  const [currentFillColor, setCurrentFillColor] = useState(appFillColor)
+  const [currentStrokeColor, setCurrentStrokeColor] = useState(appStrokeColor)
+  useEffect(() => {
+    if (!selectedShapes.length) {
+      setCurrentStrokeColor(appStrokeColor)
+      setCurrentFillColor(appFillColor)
+    } else {
+      const { fillColor, strokeColor } = selectedShapes[0][0]
+      let sameStrokeColor = true
+      let sameFillColor = true
+
+      for (const [shape] of selectedShapes) {
+        if (shape.fillColor !== fillColor) {
+          sameFillColor = false
+        }
+        if (shape.strokeColor !== strokeColor) {
+          sameStrokeColor = false
+        }
+      }
+      setCurrentStrokeColor(sameStrokeColor ? strokeColor : "")
+      setCurrentFillColor(sameFillColor ? fillColor : "")
+    }
+  }, [selectedShapes])
+
+  const handleFillColor = (color: string): void => {
+    if (!selectedShapes.length) {
+      setAppFillColor(color)
+    } else {
+      for (const [shape] of selectedShapes) {
+        shape.fillColor = color
+      }
+      drawing.render()
+      setCurrentFillColor(color)
+    }
+  }
+
+  const handleStrokeColor = (color: string): void => {
+    if (!selectedShapes.length) {
+      setAppStrokeColor(color)
+    } else {
+      for (const [shape] of selectedShapes) {
+        shape.strokeColor = color
+      }
+      drawing.render()
+      setCurrentStrokeColor(color)
+    }
+  }
+
+  // const handleShapeSelection = (shape: Shape): void => {
+  //   if (shape) {
+  //     setSelectedShapes(prev => {
+  //       const filtered = prev.filter(_shape => _shape.id !== shape.id)
+  //       return [...filtered, shape]
+  //     })
+  //   } else {
+  //     setSelectedShapes([])
+  //   }
+  // }
+
   return (
     <div id="wrapper">
       <ToolPalette
@@ -81,6 +146,10 @@ const App: React.FC<{}> = (): ReactElement => {
         pickTool={handlePickTool}
         changeHistory={handleChangeHistory}
         changeLayerOrder={handleChangeLayerOrder}
+        fillColor={currentFillColor}
+        strokeColor={currentStrokeColor}
+        handleFillColor={handleFillColor}
+        handleStrokeColor={handleStrokeColor}
       />
       <Canvas
         drawing={drawing}
@@ -88,6 +157,10 @@ const App: React.FC<{}> = (): ReactElement => {
         width={canvasWidth}
         height={canvasHeight}
         canvasRef={canvasRef}
+        fillColor={appFillColor}
+        strokeColor={appStrokeColor}
+        selectedShapes={selectedShapes}
+        onSelectShapes={setSelectedShapes}
       />
     </div>
   )

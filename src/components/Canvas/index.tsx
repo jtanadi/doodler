@@ -1,6 +1,6 @@
 import React, { useState, ReactElement, MouseEvent, RefObject } from "react"
 import Gambar from "gambar"
-import { Point, StyleProps } from "gambar/src/geometry"
+import { Point, StyleProps, Shape } from "gambar/src/geometry"
 
 import { ToolTypes, drawShapes } from "../../utils/"
 
@@ -10,6 +10,10 @@ type PropTypes = {
   currentTool: ToolTypes
   width: number
   height: number
+  fillColor: string
+  strokeColor: string
+  selectedShapes: [Shape, number][]
+  onSelectShapes([shape, i]): void
 }
 
 const Canvas: React.FC<PropTypes> = ({
@@ -18,12 +22,14 @@ const Canvas: React.FC<PropTypes> = ({
   currentTool,
   width,
   height,
+  fillColor,
+  strokeColor,
+  selectedShapes,
+  onSelectShapes,
 }): ReactElement => {
   const [mouseDown, setMouseDown] = useState(false)
   const [startPoint, setStartPoint] = useState(new Point(0, 0))
   const [endPoint, setEndPoint] = useState(new Point(0, 0))
-
-  const [shapesSelected, setShapesSelected] = useState(false)
 
   const handleMouseDown = (ev: MouseEvent): void => {
     const [x, y] = [ev.nativeEvent.offsetX, ev.nativeEvent.offsetY]
@@ -33,9 +39,10 @@ const Canvas: React.FC<PropTypes> = ({
 
     setMouseDown(true)
     if (currentTool === ToolTypes.SELECTION) {
-      const selectedShape = drawing.selectShapeAtPoint(pt)
-      setShapesSelected(!!selectedShape)
+      drawing.selectShapeAtPoint(pt)
     }
+
+    onSelectShapes(drawing.findSelectedShapes())
 
     setStartPoint(pt)
     setEndPoint(pt)
@@ -46,7 +53,7 @@ const Canvas: React.FC<PropTypes> = ({
 
     setEndPoint(new Point(ev.nativeEvent.offsetX, ev.nativeEvent.offsetY))
 
-    if (currentTool === ToolTypes.SELECTION && shapesSelected) {
+    if (currentTool === ToolTypes.SELECTION && selectedShapes.length) {
       const delta = new Point(
         endPoint.x - startPoint.x,
         endPoint.y - startPoint.y
@@ -73,9 +80,9 @@ const Canvas: React.FC<PropTypes> = ({
 
   const handleMouseUp = (): void => {
     const drawingStyle: StyleProps = {
-      strokeColor: "green",
+      strokeColor,
       strokeWidth: 1,
-      fillColor: "white",
+      fillColor,
     }
 
     drawShapes(drawing, currentTool, startPoint, endPoint, drawingStyle, true)

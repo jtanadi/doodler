@@ -3,6 +3,7 @@ import Draggable from "react-draggable"
 
 import ToolPaletteBar from "../ToolPaletteBar"
 import ToolButtonsContainer from "../ToolButtonsContainer"
+import ColorPickerContainer from "../ColorPickerContainer"
 
 import { StyledPalette } from "./styles"
 import {
@@ -14,16 +15,24 @@ import {
 
 type PropTypes = {
   currentTool: ToolTypes
+  fillColor: string
+  strokeColor: string
   pickTool(type: ToolTypes): void
   changeHistory(type: ToolTypes): void
   changeLayerOrder(type: ToolTypes): void
+  handleFillColor(type: string): void
+  handleStrokeColor(type: string): void
 }
 
 const ToolPalette: React.FC<PropTypes> = ({
   currentTool,
+  fillColor,
+  strokeColor,
   pickTool,
   changeHistory,
   changeLayerOrder,
+  handleFillColor,
+  handleStrokeColor,
 }): ReactElement => {
   const [open, setOpen] = useState(true)
   const handleClick = (): void => {
@@ -56,6 +65,12 @@ const ToolPalette: React.FC<PropTypes> = ({
         <ToolButtonsContainer
           tools={layerTools}
           handleButton={changeLayerOrder}
+        />
+        <ColorPickerContainer
+          fillColor={fillColor}
+          strokeColor={strokeColor}
+          handleFillColor={handleFillColor}
+          handleStrokeColor={handleStrokeColor}
         />
       </StyledPalette>
     </Draggable>
