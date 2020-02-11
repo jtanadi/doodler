@@ -41,7 +41,8 @@ const App: React.FC<{}> = (): ReactElement => {
   const keypress = (ev: KeyboardEvent): void => {
     // backspace
     if (ev.keyCode === 8) {
-      drawing.deleteSelectedShapes()
+      console.warn("delete not yet implemented")
+      // drawing.deleteSelectedShapes()
     }
   }
 
