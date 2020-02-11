@@ -38,20 +38,31 @@ const App: React.FC<{}> = (): ReactElement => {
     setCanvasHeight(window.innerHeight)
   }
 
+  const keypress = (ev: KeyboardEvent): void => {
+    // backspace
+    if (ev.keyCode === 8) {
+      drawing.deleteSelectedShapes()
+    }
+  }
+
   useEffect(() => {
     resizeCanvas()
-    // document.addEventListener("keypress", this.routeKeyPress)
     // document.addEventListener("keyup", this.routeKeyUp)
     // window.addEventListener("resize", resizeCanvas)
 
     // return (): void => {
-    //   window.removeEventListener("resize", resizeCanvas)
+    // window.removeEventListener("resize", resizeCanvas)
     // }
   }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
     setDrawing(new Gambar(canvas, boundingBoxStyle))
+    document.addEventListener("keydown", keypress)
+
+    return (): void => {
+      document.removeEventListener("keydown", keypress)
+    }
   }, [canvasWidth, canvasHeight])
 
   const [currentTool, setCurrentTool] = useState(ToolTypes.SELECTION)
