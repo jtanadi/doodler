@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, ReactElement } from "react"
+import styled from "styled-components"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
 
 import Canvas from "./Canvas"
 import ToolPalette from "./ToolPalette"
 
-import { ToolTypes } from "../utils"
+import { ToolTypes, parseColor } from "../utils"
 
 const boundingBoxStyle = {
   edgeStyle: {
@@ -20,6 +21,11 @@ const boundingBoxStyle = {
 }
 
 const HISTORY = []
+
+const Cover = styled.div`
+  position: absolute;
+  inset: 0;
+`
 
 const App: React.FC<{}> = (): ReactElement => {
   const canvasRef = useRef(null)
@@ -77,8 +83,8 @@ const App: React.FC<{}> = (): ReactElement => {
 
   const [selectedShapes, setSelectedShapes] = useState<[Shape, number][]>([])
 
-  const [appFillColor, setAppFillColor] = useState("white")
-  const [appStrokeColor, setAppStrokeColor] = useState("black")
+  const [appFillColor, setAppFillColor] = useState("#fff")
+  const [appStrokeColor, setAppStrokeColor] = useState("#000")
 
   const [currentFillColor, setCurrentFillColor] = useState(appFillColor)
   const [currentStrokeColor, setCurrentStrokeColor] = useState(appStrokeColor)
@@ -104,40 +110,49 @@ const App: React.FC<{}> = (): ReactElement => {
     }
   }, [selectedShapes])
 
-  const handleFillColor = (color: string): void => {
+  const handleFillColor = (color): void => {
+    const rgba = parseColor(color)
     if (!selectedShapes.length) {
-      setAppFillColor(color)
+      setAppFillColor(rgba)
     } else {
       for (const [shape] of selectedShapes) {
-        shape.fillColor = color
+        shape.fillColor = rgba
       }
       drawing.render()
-      setCurrentFillColor(color)
     }
+    setCurrentFillColor(rgba)
   }
 
-  const handleStrokeColor = (color: string): void => {
+  const handleStrokeColor = (color): void => {
+    const rgba = parseColor(color)
     if (!selectedShapes.length) {
-      setAppStrokeColor(color)
+      setAppStrokeColor(rgba)
     } else {
       for (const [shape] of selectedShapes) {
-        shape.strokeColor = color
+        shape.strokeColor = rgba
       }
       drawing.render()
-      setCurrentStrokeColor(color)
     }
+    setCurrentStrokeColor(rgba)
   }
 
-  // const handleShapeSelection = (shape: Shape): void => {
-  //   if (shape) {
-  //     setSelectedShapes(prev => {
-  //       const filtered = prev.filter(_shape => _shape.id !== shape.id)
-  //       return [...filtered, shape]
-  //     })
-  //   } else {
-  //     setSelectedShapes([])
-  //   }
-  // }
+  const [displayFillPicker, setDisplayFillPicker] = useState(false)
+  const [displayStrokePicker, setDisplayStrokePicker] = useState(false)
+
+  const handleFillClick = (): void => {
+    setDisplayStrokePicker(false)
+    setDisplayFillPicker(prev => !prev)
+  }
+
+  const handleStrokeClick = (): void => {
+    setDisplayFillPicker(false)
+    setDisplayStrokePicker(prev => !prev)
+  }
+
+  const handleCloseCover = (): void => {
+    setDisplayFillPicker(false)
+    setDisplayStrokePicker(false)
+  }
 
   return (
     <div id="wrapper">
@@ -148,9 +163,16 @@ const App: React.FC<{}> = (): ReactElement => {
         changeLayerOrder={handleChangeLayerOrder}
         fillColor={currentFillColor}
         strokeColor={currentStrokeColor}
-        handleFillColor={handleFillColor}
-        handleStrokeColor={handleStrokeColor}
+        onFillColorChange={handleFillColor}
+        onStrokeColorChange={handleStrokeColor}
+        displayFillPicker={displayFillPicker}
+        onFillColorClick={handleFillClick}
+        displayStrokePicker={displayStrokePicker}
+        onStrokeColorClick={handleStrokeClick}
       />
+      {displayFillPicker || displayStrokePicker ? (
+        <Cover onClick={handleCloseCover} />
+      ) : null}
       <Canvas
         drawing={drawing}
         currentTool={currentTool}

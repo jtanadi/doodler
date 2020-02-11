@@ -5,26 +5,20 @@ import { StyledContainer, StrokeColorButton, FillColorButton } from "./styles"
 type PropTypes = {
   strokeColor: string
   fillColor: string
-  handleFillColor(type: string): void
-  handleStrokeColor(type: string): void
+  handleFillClick(): void
+  handleStrokeClick(): void
 }
 
 const ColorPickerContainer: React.FC<PropTypes> = ({
   strokeColor,
   fillColor,
-  handleFillColor,
-  handleStrokeColor,
+  handleFillClick,
+  handleStrokeClick,
 }): ReactElement => {
   return (
     <StyledContainer>
-      <FillColorButton
-        color={fillColor}
-        onClick={(): void => handleFillColor("yellow")}
-      />
-      <StrokeColorButton
-        color={strokeColor}
-        onClick={(): void => handleStrokeColor("blue")}
-      />
+      <FillColorButton color={fillColor} onClick={handleFillClick} />
+      <StrokeColorButton color={strokeColor} onClick={handleStrokeClick} />
     </StyledContainer>
   )
 }
