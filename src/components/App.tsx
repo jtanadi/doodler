@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, ReactElement } from "react"
 import styled from "styled-components"
+import Draggable from "react-draggable"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
 
 import Canvas from "./Canvas"
 import ToolPalette from "./ToolPalette"
+import Window from "./Window"
 
 import { ToolTypes, parseColor } from "../utils"
 
@@ -25,6 +27,7 @@ const HISTORY = []
 const Cover = styled.div`
   position: absolute;
   inset: 0;
+  z-index: 1;
 `
 
 const App: React.FC<{}> = (): ReactElement => {
@@ -34,8 +37,8 @@ const App: React.FC<{}> = (): ReactElement => {
   const [canvasHeight, setCanvasHeight] = useState(0)
 
   const resizeCanvas = (): void => {
-    setCanvasWidth(window.innerWidth)
-    setCanvasHeight(window.innerHeight)
+    setCanvasWidth(600)
+    setCanvasHeight(400)
   }
 
   const keypress = (ev: KeyboardEvent): void => {
@@ -185,17 +188,23 @@ const App: React.FC<{}> = (): ReactElement => {
       {displayFillPicker || displayStrokePicker ? (
         <Cover onClick={handleCloseCover} />
       ) : null}
-      <Canvas
-        drawing={drawing}
-        currentTool={currentTool}
-        width={canvasWidth}
-        height={canvasHeight}
-        canvasRef={canvasRef}
-        fillColor={appFillColor}
-        strokeColor={appStrokeColor}
-        selectedShapes={selectedShapes}
-        onSelectShapes={setSelectedShapes}
-      />
+      <Window
+        draggable
+        contentWidth={canvasWidth / 16}
+        contentHeight={canvasHeight / 16}
+      >
+        <Canvas
+          drawing={drawing}
+          currentTool={currentTool}
+          width={canvasWidth}
+          height={canvasHeight}
+          canvasRef={canvasRef}
+          fillColor={appFillColor}
+          strokeColor={appStrokeColor}
+          selectedShapes={selectedShapes}
+          onSelectShapes={setSelectedShapes}
+        />
+      </Window>
     </div>
   )
 }
