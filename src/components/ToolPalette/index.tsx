@@ -51,17 +51,7 @@ const ToolPalette: React.FC<PropTypes> = ({
   return (
     <Draggable handle=".palette-bar" bounds="body">
       <PaletteWrapper>
-        <StyledPalette
-          open={open}
-          numOfTools={
-            drawingTools.length -
-            1 +
-            historyTools.length -
-            1 +
-            layerTools.length -
-            1
-          }
-        >
+        <StyledPalette open={open} contentHeight={6 * 2.5 + 3 * 0.25 + 2.5}>
           <ToolPaletteBar onClick={handleMinimize} />
           <ToolButtonsContainer
             tools={drawingTools}

@@ -2,8 +2,9 @@ import styled, { css } from "styled-components"
 
 const StyledPalette = styled.div`
   width: 5.95rem;
-  // height: auto;
-  height: ${props => (props.numOfTools * 3) / 2 + 3.35}rem;
+  height: ${props => props.contentHeight}rem;
+  // height: calc((6 * 2.5rem) + (3 * 0.25rem) + 2.5rem);
+  padding: 0 calc(0.95rem / 2 - 2px) 0.5rem calc(0.95rem / 2 - 2px);
   overflow: hidden;
   background-color: lightgray;
   border: 1px solid black;
@@ -14,7 +15,7 @@ const StyledPalette = styled.div`
   ${props =>
     !props.open &&
     css`
-      height: 2rem;
+      height: 1.75rem;
     `}
 `
 
