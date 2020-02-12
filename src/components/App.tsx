@@ -20,13 +20,18 @@ const Cover = styled.div`
 `
 
 const App: React.FC<{}> = (): ReactElement => {
-  const [drawings, setDrawings] = useState<Gambar>([])
+  const [forceRender, setForceRender] = useState(false)
+  const [drawings, setDrawings] = useState({})
   const handleAddDrawing = (): void => {
     const newDwg = new Gambar()
     newDwg.id = nanoid()
     newDwg.isCurrent = false
     newDwg.setBoundingBoxStyle(boundingBoxStyle)
-    setDrawings((dwg: Gambar): Gambar[] => [...dwg, newDwg])
+    setDrawings(prev => {
+      prev[newDwg.id] = newDwg
+      return prev
+    })
+    setForceRender(true)
   }
 
   const keydown = (ev: KeyboardEvent): void => {
@@ -54,23 +59,25 @@ const App: React.FC<{}> = (): ReactElement => {
 
   const [currentDrawing, setCurrentDrawing] = useState(null)
   const handleCurrentDrawing = (id: string): void => {
-    drawings.forEach((drawing: Gambar): void => {
-      if (drawing.id === id) {
-        drawing.isCurrent = true
-        setCurrentDrawing(drawing)
-      } else {
-        drawing.isCurrent = false
-        drawing.clearSelection()
-      }
-    })
+    if (currentDrawing) {
+      currentDrawing.isCurrent = false
+      currentDrawing.clearSelection()
+    }
+    drawings[id].isCurrent = true
+    setCurrentDrawing(drawings[id])
   }
 
   useEffect(() => {
-    const lastDwg = drawings[drawings.length - 1]
-    if (lastDwg) {
-      handleCurrentDrawing(lastDwg.id)
+    if (!forceRender) return
+    setForceRender(false)
+    const lastDwgId = Object.keys(drawings).find((key, i, arr) => {
+      if (i === arr.length - 1) return key
+    })
+
+    if (lastDwgId) {
+      handleCurrentDrawing(lastDwgId)
     }
-  }, [drawings.length])
+  }, [forceRender])
 
   const [currentTool, setCurrentTool] = useState(ToolTypes.SELECTION)
   const handlePickTool = (type: ToolTypes): void => {
@@ -193,23 +200,25 @@ const App: React.FC<{}> = (): ReactElement => {
       {displayFillPicker || displayStrokePicker ? (
         <Cover onClick={handleCloseCover} />
       ) : null}
-      {drawings.map((drawing, i) => (
-        <CanvasWindow
-          key={drawing.id}
-          drawing={drawing}
-          isCurrent={drawing.isCurrent}
-          canvasWidth={DEFAULT_CANVAS_WIDTH}
-          canvasHeight={DEFAULT_CANVAS_HEIGHT}
-          currentTool={currentTool}
-          strokeColor={currentStrokeColor}
-          fillColor={currentFillColor}
-          selectedShapes={selectedShapes}
-          setSelectedShapes={setSelectedShapes}
-          handleCurrentDrawing={handleCurrentDrawing}
-          windowTopLocation={3 + i * 3}
-          windowLeftLocation={10 + i * 3}
-        />
-      ))}
+      {
+        Object.keys(drawings).map((id, i) => (
+          <CanvasWindow
+            key={id}
+            drawing={drawings[id]}
+            isCurrent={drawings[id].isCurrent}
+            canvasWidth={DEFAULT_CANVAS_WIDTH}
+            canvasHeight={DEFAULT_CANVAS_HEIGHT}
+            currentTool={currentTool}
+            strokeColor={currentStrokeColor}
+            fillColor={currentFillColor}
+            selectedShapes={selectedShapes}
+            setSelectedShapes={setSelectedShapes}
+            handleCurrentDrawing={handleCurrentDrawing}
+            windowTopLocation={3 + i * 3}
+            windowLeftLocation={10 + i * 3}
+          />
+        ))
+      }
     </div>
   )
 }
