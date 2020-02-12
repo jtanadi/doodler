@@ -59,7 +59,7 @@ const App: React.FC<{}> = (): ReactElement => {
 
   const [currentDrawing, setCurrentDrawing] = useState(null)
   const handleCurrentDrawing = (id: string): void => {
-    if (currentDrawing) {
+    if (currentDrawing && currentDrawing.id !== id) {
       currentDrawing.isCurrent = false
       currentDrawing.clearSelection()
     }
