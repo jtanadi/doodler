@@ -6,27 +6,40 @@ import WindowBar from "../WindowBar"
 
 type PropTypes = {
   children: ReactNodeArray | ReactNode
-  draggable: boolean
+  useDraggable: boolean
   contentWidth: number
   contentHeight: number
+  top?: number
+  left?: number
+  current?: boolean
+  handleClick?(): void
 }
 
 const Window: React.FC<PropTypes> = ({
-  draggable,
+  useDraggable,
   children,
   contentWidth,
   contentHeight,
+  top,
+  left,
+  current,
+  handleClick,
 }): ReactElement => {
   const [open, setOpen] = useState(true)
   const handleMinimize = (): void => setOpen(prevState => !prevState)
 
-  if (draggable) {
+  if (useDraggable) {
     return (
       <Draggable handle=".palette-bar" bounds="body">
         <StyledWindow
           open={open}
+          absolutePosition={true}
           contentWidth={contentWidth}
           contentHeight={contentHeight}
+          onClick={handleClick}
+          top={top}
+          left={left}
+          current={current}
         >
           <WindowBar onClick={handleMinimize} />
           {children}
