@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components"
 
 const StyledToolButton = styled.button`
-  width: 2.5rem;
+  flex: 1;
   height: 2.5rem;
   background-color: white;
   border: 0;

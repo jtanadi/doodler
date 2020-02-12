@@ -1,70 +1,83 @@
-import React, { useState, useEffect, useRef, ReactElement } from "react"
+import React, { useState, useEffect, ReactElement } from "react"
 import styled from "styled-components"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
+import nanoid from "nanoid"
 
-import Canvas from "./Canvas"
 import ToolPalette from "./ToolPalette"
+import CanvasWindow from "./CanvasWindow"
 
-import { ToolTypes, parseColor } from "../utils"
-
-const boundingBoxStyle = {
-  edgeStyle: {
-    strokeColor: "#0D98BA",
-    strokeWidth: 2,
-  },
-  nodeStyle: {
-    strokeColor: "black",
-    strokeWidth: 1,
-    fillColor: "white",
-  },
-}
+import { boundingBoxStyle, ToolTypes, parseColor } from "../utils"
 
 const HISTORY = []
+const DEFAULT_CANVAS_WIDTH = 600
+const DEFAULT_CANVAS_HEIGHT = 400
 
 const Cover = styled.div`
   position: absolute;
   inset: 0;
+  z-index: 97;
 `
 
 const App: React.FC<{}> = (): ReactElement => {
-  const canvasRef = useRef(null)
-  const [drawing, setDrawing] = useState<Gambar | null>(null)
-  const [canvasWidth, setCanvasWidth] = useState(0)
-  const [canvasHeight, setCanvasHeight] = useState(0)
-
-  const resizeCanvas = (): void => {
-    setCanvasWidth(window.innerWidth)
-    setCanvasHeight(window.innerHeight)
+  const [forceRender, setForceRender] = useState(false)
+  const [drawings, setDrawings] = useState({})
+  const handleAddDrawing = (): void => {
+    const newDwg = new Gambar()
+    newDwg.id = nanoid()
+    newDwg.isCurrent = false
+    newDwg.setBoundingBoxStyle(boundingBoxStyle)
+    setDrawings(prev => {
+      prev[newDwg.id] = newDwg
+      return prev
+    })
+    setForceRender(true)
   }
 
-  const keypress = (ev: KeyboardEvent): void => {
-    // backspace
-    if (ev.keyCode === 8) {
-      console.warn("delete not yet implemented")
-      // drawing.deleteSelectedShapes()
+  const keydown = (ev: KeyboardEvent): void => {
+    switch (ev.keyCode) {
+      // backspace
+      case 8:
+        console.warn("delete not yet implemented")
+        break
+
+      // cap N
+      case 78:
+        handleAddDrawing()
+        break
     }
   }
 
   useEffect(() => {
-    resizeCanvas()
-    // document.addEventListener("keyup", this.routeKeyUp)
-    // window.addEventListener("resize", resizeCanvas)
-
-    // return (): void => {
-    // window.removeEventListener("resize", resizeCanvas)
-    // }
-  }, [])
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    setDrawing(new Gambar(canvas, boundingBoxStyle))
-    document.addEventListener("keydown", keypress)
+    handleAddDrawing()
+    window.addEventListener("keydown", keydown)
 
     return (): void => {
-      document.removeEventListener("keydown", keypress)
+      window.removeEventListener("keydown", keydown)
     }
-  }, [canvasWidth, canvasHeight])
+  }, [])
+
+  const [currentDrawing, setCurrentDrawing] = useState(null)
+  const handleCurrentDrawing = (id: string): void => {
+    if (currentDrawing && currentDrawing.id !== id) {
+      currentDrawing.isCurrent = false
+      currentDrawing.clearSelection()
+    }
+    drawings[id].isCurrent = true
+    setCurrentDrawing(drawings[id])
+  }
+
+  useEffect(() => {
+    if (!forceRender) return
+    setForceRender(false)
+    const lastDwgId = Object.keys(drawings).find((key, i, arr) => {
+      if (i === arr.length - 1) return key
+    })
+
+    if (lastDwgId) {
+      handleCurrentDrawing(lastDwgId)
+    }
+  }, [forceRender])
 
   const [currentTool, setCurrentTool] = useState(ToolTypes.SELECTION)
   const handlePickTool = (type: ToolTypes): void => {
@@ -73,23 +86,23 @@ const App: React.FC<{}> = (): ReactElement => {
 
   const handleChangeHistory = (type: ToolTypes): void => {
     if (type === ToolTypes.UNDO) {
-      const shape = drawing.popShape()
+      const shape = currentDrawing.popShape()
       if (shape) {
         HISTORY.push(shape)
       }
     } else if (type === ToolTypes.REDO) {
       const shape = HISTORY.pop()
       if (shape) {
-        drawing.pushShape(shape)
+        currentDrawing.pushShape(shape)
       }
     }
   }
 
   const handleChangeLayerOrder = (type: ToolTypes): void => {
     if (type === ToolTypes.PUSH_BACKWARD) {
-      drawing.pushSelectedShapesBackward()
+      currentDrawing.pushSelectedShapesBackward()
     } else if (type === ToolTypes.PULL_FORWARD) {
-      drawing.pullSelectedShapesForward()
+      currentDrawing.pullSelectedShapesForward()
     }
   }
 
@@ -127,10 +140,11 @@ const App: React.FC<{}> = (): ReactElement => {
     if (!selectedShapes.length) {
       setAppFillColor(rgba)
     } else {
+      // maybe not the right way of doing this
+      // or not the right place for this
       for (const [shape] of selectedShapes) {
         shape.fillColor = rgba
       }
-      drawing.render()
     }
     setCurrentFillColor(rgba)
   }
@@ -140,10 +154,11 @@ const App: React.FC<{}> = (): ReactElement => {
     if (!selectedShapes.length) {
       setAppStrokeColor(rgba)
     } else {
+      // maybe not the right way of doing this
+      // or not the right place for this
       for (const [shape] of selectedShapes) {
         shape.strokeColor = rgba
       }
-      drawing.render()
     }
     setCurrentStrokeColor(rgba)
   }
@@ -185,17 +200,25 @@ const App: React.FC<{}> = (): ReactElement => {
       {displayFillPicker || displayStrokePicker ? (
         <Cover onClick={handleCloseCover} />
       ) : null}
-      <Canvas
-        drawing={drawing}
-        currentTool={currentTool}
-        width={canvasWidth}
-        height={canvasHeight}
-        canvasRef={canvasRef}
-        fillColor={appFillColor}
-        strokeColor={appStrokeColor}
-        selectedShapes={selectedShapes}
-        onSelectShapes={setSelectedShapes}
-      />
+      {
+        Object.keys(drawings).map((id, i) => (
+          <CanvasWindow
+            key={id}
+            drawing={drawings[id]}
+            isCurrent={drawings[id].isCurrent}
+            canvasWidth={DEFAULT_CANVAS_WIDTH}
+            canvasHeight={DEFAULT_CANVAS_HEIGHT}
+            currentTool={currentTool}
+            strokeColor={currentStrokeColor}
+            fillColor={currentFillColor}
+            selectedShapes={selectedShapes}
+            setSelectedShapes={setSelectedShapes}
+            handleCurrentDrawing={handleCurrentDrawing}
+            windowTopLocation={3 + i * 3}
+            windowLeftLocation={10 + i * 3}
+          />
+        ))
+      }
     </div>
   )
 }

@@ -2,11 +2,9 @@ import styled from "styled-components"
 
 const StyledBar = styled.div`
   width: 100%;
-  height: 1.75rem;
-  position: absolute;
-  top: 0;
-  left: 0;
+  height: 1.9rem;
   cursor: grabbing;
+  position: relative;
 `
 
 const StyledMinimizeBtn = styled.button`
@@ -15,7 +13,7 @@ const StyledMinimizeBtn = styled.button`
   position: absolute;
   padding: none;
   top: calc((1.75rem - 1rem) / 2);
-  left: calc((1.75rem - 1rem) / 2);
+  left: 0rem;
   background-color: lightgray;
   border: 1px solid black;
   box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.75),

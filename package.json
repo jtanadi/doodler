@@ -16,6 +16,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "gambar": "github:jtanadi/gambar#master",
+    "nanoid": "^2.1.11",
     "react": "^16.9.0",
     "react-color": "^2.18.0",
     "react-dom": "^16.9.0",

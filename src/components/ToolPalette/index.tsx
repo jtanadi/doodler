@@ -1,12 +1,12 @@
-import React, { useState, ReactElement } from "react"
+import React, { ReactElement } from "react"
 import Draggable from "react-draggable"
 import { SketchPicker } from "react-color"
 
-import ToolPaletteBar from "../ToolPaletteBar"
+import Window from "../Window"
 import ToolButtonsContainer from "../ToolButtonsContainer"
 import ColorPickerContainer from "../ColorPickerContainer"
 
-import { StyledPalette, Popover, PaletteWrapper } from "./styles"
+import { Popover, PaletteWrapper } from "./styles"
 import {
   ToolTypes,
   drawingTools,
@@ -43,26 +43,14 @@ const ToolPalette: React.FC<PropTypes> = ({
   onFillColorClick,
   onStrokeColorClick,
 }): ReactElement => {
-  const [open, setOpen] = useState(true)
-  const handleMinimize = (): void => {
-    setOpen(prevState => !prevState)
-  }
-
   return (
     <Draggable handle=".palette-bar" bounds="body">
       <PaletteWrapper>
-        <StyledPalette
-          open={open}
-          numOfTools={
-            drawingTools.length -
-            1 +
-            historyTools.length -
-            1 +
-            layerTools.length -
-            1
-          }
+        <Window
+          draggable={false}
+          contentWidth={5}
+          contentHeight={6 * 2.5 + 3 * 0.25}
         >
-          <ToolPaletteBar onClick={handleMinimize} />
           <ToolButtonsContainer
             tools={drawingTools}
             currentTool={currentTool}
@@ -82,7 +70,7 @@ const ToolPalette: React.FC<PropTypes> = ({
             handleFillClick={onFillColorClick}
             handleStrokeClick={onStrokeColorClick}
           />
-        </StyledPalette>
+        </Window>
 
         {displayFillPicker ? (
           <Popover>
