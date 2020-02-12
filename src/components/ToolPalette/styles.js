@@ -2,7 +2,7 @@ import styled, { css } from "styled-components"
 
 const Popover = styled.div`
   position: absolute;
-  z-index: 3;
+  z-index: 99;
 
   ${props =>
     props.stroke &&
@@ -13,7 +13,7 @@ const Popover = styled.div`
 
 const PaletteWrapper = styled.div`
   position: fixed;
-  z-index: 2;
+  z-index: 98;
   top: 3rem;
   left: 3rem;
 `
