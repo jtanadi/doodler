@@ -1,5 +1,4 @@
 import React, {
-  useState,
   useRef,
   useEffect,
   ReactElement,
@@ -10,14 +9,12 @@ import { ToolTypes } from "../../utils"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
 
-import Window from "../BaseWindow"
+import Window from "../Window"
 import Canvas from "../Canvas"
 
-import { boundingBoxStyle } from "../../utils"
-
 type PropTypes = {
-  id: string
-  current: boolean
+  drawing: Gambar
+  isCurrent: boolean
   canvasWidth: number
   canvasHeight: number
   currentTool: ToolTypes
@@ -27,12 +24,12 @@ type PropTypes = {
   windowTopLocation?: number
   windowLeftLocation?: number
   setSelectedShapes: Dispatch<SetStateAction<[Shape, number][]>>
-  setCurrentDrawing(drawing: ReactElement): void
+  handleCurrentDrawing(id: string): void
 }
 
 const CanvasWindow: React.FC<PropTypes> = ({
-  id,
-  current,
+  drawing,
+  isCurrent: current,
   canvasWidth,
   canvasHeight,
   currentTool,
@@ -42,16 +39,13 @@ const CanvasWindow: React.FC<PropTypes> = ({
   windowTopLocation,
   windowLeftLocation,
   setSelectedShapes,
-  setCurrentDrawing,
+  handleCurrentDrawing,
 }): ReactElement => {
-  const [drawing, setDrawing] = useState<Gambar | null>(null)
   const canvasRef = useRef(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const newDrawing = new Gambar(canvas, boundingBoxStyle)
-    newDrawing.id = id
-    setDrawing(newDrawing)
+    drawing.setCanvas(canvas)
   }, [])
 
   useEffect(() => {
@@ -62,10 +56,10 @@ const CanvasWindow: React.FC<PropTypes> = ({
 
   return (
     <Window
-      draggable
+      useDraggable
       contentWidth={canvasWidth / 16}
       contentHeight={canvasHeight / 16}
-      handleClick={(): void => setCurrentDrawing(drawing)}
+      handleClick={(): void => handleCurrentDrawing(drawing.id)}
       top={windowTopLocation || 3}
       left={windowLeftLocation || 6}
       current={current}
