@@ -5,7 +5,7 @@ type PropTypes = {
   onClick(e: MouseEvent): void
 }
 
-const ToolPaletteBar: React.FC<PropTypes> = ({ onClick }): ReactElement => {
+const WindowBar: React.FC<PropTypes> = ({ onClick }): ReactElement => {
   return (
     <StyledBar className="palette-bar">
       <StyledMinimizeBtn onClick={onClick} />
@@ -13,4 +13,4 @@ const ToolPaletteBar: React.FC<PropTypes> = ({ onClick }): ReactElement => {
   )
 }
 
-export default ToolPaletteBar
+export default WindowBar

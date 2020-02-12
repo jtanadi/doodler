@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, ReactElement } from "react"
 import styled from "styled-components"
-import Draggable from "react-draggable"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
 
