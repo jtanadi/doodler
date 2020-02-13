@@ -6,6 +6,7 @@ import nanoid from "nanoid"
 
 import ToolPalette from "./ToolPalette"
 import CanvasWindow from "./CanvasWindow"
+import AddButton from "./AddButton"
 
 import { boundingBoxStyle, ToolTypes, parseColor } from "../utils"
 
@@ -212,6 +213,7 @@ const App: React.FC<{}> = (): ReactElement => {
           windowLeftLocation={drawing.left}
         />
       ))}
+      <AddButton handleAdd={handleAddDrawing} />
     </>
   )
 }
