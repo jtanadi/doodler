@@ -20,18 +20,17 @@ const Cover = styled.div`
 `
 
 const App: React.FC<{}> = (): ReactElement => {
-  const [forceRender, setForceRender] = useState(false)
-  const [drawings, setDrawings] = useState({})
+  const [drawings, setDrawings] = useState([])
   const handleAddDrawing = (): void => {
-    const newDwg = new Gambar()
-    newDwg.id = nanoid()
-    newDwg.isCurrent = false
-    newDwg.setBoundingBoxStyle(boundingBoxStyle)
     setDrawings(prev => {
-      prev[newDwg.id] = newDwg
-      return prev
+      const newDwg = new Gambar()
+      newDwg.id = nanoid()
+      newDwg.setBoundingBoxStyle(boundingBoxStyle)
+      newDwg.top = (prev.length + 1) * 3
+      newDwg.left = prev.length * 3 + 10
+
+      return [...prev, newDwg]
     })
-    setForceRender(true)
   }
 
   const keydown = (ev: KeyboardEvent): void => {
@@ -57,27 +56,19 @@ const App: React.FC<{}> = (): ReactElement => {
     }
   }, [])
 
-  const [currentDrawing, setCurrentDrawing] = useState(null)
   const handleCurrentDrawing = (id: string): void => {
-    if (currentDrawing && currentDrawing.id !== id) {
-      currentDrawing.isCurrent = false
+    // Top most drawing is current drawing
+    const currentDrawing = drawings[drawings.length - 1]
+    if (id === currentDrawing.id) return
+
+    setDrawings(prev => {
+      const newCurrentIdx = drawings.findIndex(drawing => drawing.id === id)
+      const newCurrentDwg = drawings[newCurrentIdx]
       currentDrawing.clearSelection()
-    }
-    drawings[id].isCurrent = true
-    setCurrentDrawing(drawings[id])
-  }
-
-  useEffect(() => {
-    if (!forceRender) return
-    setForceRender(false)
-    const lastDwgId = Object.keys(drawings).find((key, i, arr) => {
-      if (i === arr.length - 1) return key
+      prev.splice(newCurrentIdx, 1)
+      return [...prev, newCurrentDwg]
     })
-
-    if (lastDwgId) {
-      handleCurrentDrawing(lastDwgId)
-    }
-  }, [forceRender])
+  }
 
   const [currentTool, setCurrentTool] = useState(ToolTypes.SELECTION)
   const handlePickTool = (type: ToolTypes): void => {
@@ -85,6 +76,8 @@ const App: React.FC<{}> = (): ReactElement => {
   }
 
   const handleChangeHistory = (type: ToolTypes): void => {
+    const currentDrawing = drawings[drawings.length - 1]
+
     if (type === ToolTypes.UNDO) {
       const shape = currentDrawing.popShape()
       if (shape) {
@@ -99,6 +92,8 @@ const App: React.FC<{}> = (): ReactElement => {
   }
 
   const handleChangeLayerOrder = (type: ToolTypes): void => {
+    const currentDrawing = drawings[drawings.length - 1]
+
     if (type === ToolTypes.PUSH_BACKWARD) {
       currentDrawing.pushSelectedShapesBackward()
     } else if (type === ToolTypes.PULL_FORWARD) {
@@ -200,25 +195,23 @@ const App: React.FC<{}> = (): ReactElement => {
       {displayFillPicker || displayStrokePicker ? (
         <Cover onClick={handleCloseCover} />
       ) : null}
-      {
-        Object.keys(drawings).map((id, i) => (
-          <CanvasWindow
-            key={id}
-            drawing={drawings[id]}
-            isCurrent={drawings[id].isCurrent}
-            canvasWidth={DEFAULT_CANVAS_WIDTH}
-            canvasHeight={DEFAULT_CANVAS_HEIGHT}
-            currentTool={currentTool}
-            strokeColor={currentStrokeColor}
-            fillColor={currentFillColor}
-            selectedShapes={selectedShapes}
-            setSelectedShapes={setSelectedShapes}
-            handleCurrentDrawing={handleCurrentDrawing}
-            windowTopLocation={3 + i * 3}
-            windowLeftLocation={10 + i * 3}
-          />
-        ))
-      }
+      {drawings.map((drawing, i) => (
+        <CanvasWindow
+          key={drawing.id}
+          drawing={drawing}
+          isCurrent={i === drawings.length - 1}
+          canvasWidth={DEFAULT_CANVAS_WIDTH}
+          canvasHeight={DEFAULT_CANVAS_HEIGHT}
+          currentTool={currentTool}
+          strokeColor={currentStrokeColor}
+          fillColor={currentFillColor}
+          selectedShapes={selectedShapes}
+          setSelectedShapes={setSelectedShapes}
+          handleCurrentDrawing={handleCurrentDrawing}
+          windowTopLocation={drawing.top}
+          windowLeftLocation={drawing.left}
+        />
+      ))}
     </div>
   )
 }
