@@ -177,7 +177,7 @@ const App: React.FC<{}> = (): ReactElement => {
   }
 
   return (
-    <div id="wrapper">
+    <>
       <ToolPalette
         currentTool={currentTool}
         pickTool={handlePickTool}
@@ -212,7 +212,7 @@ const App: React.FC<{}> = (): ReactElement => {
           windowLeftLocation={drawing.left}
         />
       ))}
-    </div>
+    </>
   )
 }
 
