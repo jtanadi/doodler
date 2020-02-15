@@ -8,21 +8,22 @@ import ColorPickerContainer from "../ColorPickerContainer"
 
 import { Popover, PaletteWrapper } from "./styles"
 import {
-  ToolTypes,
+  DrawingToolTypes,
+  DrawingActions,
   drawingTools,
   historyTools,
   layerTools,
 } from "../../utils/tools"
 
 type PropTypes = {
-  currentTool: ToolTypes
+  currentTool: DrawingToolTypes
   fillColor: string
   strokeColor: string
   displayFillPicker: boolean
   displayStrokePicker: boolean
-  pickTool(type: ToolTypes): void
-  changeHistory(type: ToolTypes): void
-  changeLayerOrder(type: ToolTypes): void
+  pickTool(type: DrawingToolTypes): void
+  changeHistory(type: DrawingActions): void
+  changeLayerOrder(type: DrawingActions): void
   onFillColorChange(color): void
   onStrokeColorChange(color): void
   onFillColorClick(): void
@@ -46,11 +47,7 @@ const ToolPalette: React.FC<PropTypes> = ({
   return (
     <Draggable handle=".palette-bar" bounds="body">
       <PaletteWrapper>
-        <Window
-          draggable={false}
-          contentWidth={5}
-          contentHeight={6 * 2.5 + 3 * 0.25}
-        >
+        <Window contentWidth={5} contentHeight={6 * 2.5 + 3 * 0.25}>
           <ToolButtonsContainer
             tools={drawingTools}
             currentTool={currentTool}

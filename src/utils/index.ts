@@ -1,14 +1,21 @@
 import drawShapes from "./drawShapes"
 import { getDiamondPoints, getTrianglePoints } from "./getShapePoints"
-import { ToolTypes, Tool, drawingTools, historyTools } from "./tools"
+import {
+  DrawingToolTypes,
+  DrawingActions,
+  Tool,
+  drawingTools,
+  historyTools,
+} from "./tools"
 import parseColor from "./parseColor"
 import { boundingBoxStyle } from "./drawingStyles"
 
 export {
+  DrawingToolTypes,
   drawShapes,
   getDiamondPoints,
   getTrianglePoints,
-  ToolTypes,
+  DrawingActions,
   Tool,
   drawingTools,
   historyTools,

@@ -5,7 +5,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react"
-import { ToolTypes } from "../../utils"
+import { DrawingToolTypes } from "../../utils"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
 
@@ -17,7 +17,7 @@ type PropTypes = {
   isCurrent: boolean
   canvasWidth: number
   canvasHeight: number
-  currentTool: ToolTypes
+  currentTool: DrawingToolTypes
   strokeColor: string
   fillColor: string
   selectedShapes: [Shape, number][]

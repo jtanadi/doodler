@@ -8,7 +8,12 @@ import ToolPalette from "./ToolPalette"
 import CanvasWindow from "./CanvasWindow"
 import AddButton from "./AddButton"
 
-import { boundingBoxStyle, ToolTypes, parseColor } from "../utils"
+import {
+  boundingBoxStyle,
+  DrawingToolTypes,
+  DrawingActions,
+  parseColor,
+} from "../utils"
 
 const HISTORY = []
 const DEFAULT_CANVAS_WIDTH = 600
@@ -71,20 +76,20 @@ const App: React.FC<{}> = (): ReactElement => {
     })
   }
 
-  const [currentTool, setCurrentTool] = useState(ToolTypes.SELECTION)
-  const handlePickTool = (type: ToolTypes): void => {
+  const [currentTool, setCurrentTool] = useState(DrawingToolTypes.SELECTION)
+  const handlePickTool = (type: DrawingToolTypes): void => {
     setCurrentTool(type)
   }
 
-  const handleChangeHistory = (type: ToolTypes): void => {
+  const handleChangeHistory = (type: DrawingActions): void => {
     const currentDrawing = drawings[drawings.length - 1]
 
-    if (type === ToolTypes.UNDO) {
+    if (type === DrawingActions.UNDO) {
       const shape = currentDrawing.popShape()
       if (shape) {
         HISTORY.push(shape)
       }
-    } else if (type === ToolTypes.REDO) {
+    } else if (type === DrawingActions.REDO) {
       const shape = HISTORY.pop()
       if (shape) {
         currentDrawing.pushShape(shape)
@@ -92,12 +97,12 @@ const App: React.FC<{}> = (): ReactElement => {
     }
   }
 
-  const handleChangeLayerOrder = (type: ToolTypes): void => {
+  const handleChangeLayerOrder = (type: DrawingActions): void => {
     const currentDrawing = drawings[drawings.length - 1]
 
-    if (type === ToolTypes.PUSH_BACKWARD) {
+    if (type === DrawingActions.PUSH_BACKWARD) {
       currentDrawing.pushSelectedShapesBackward()
-    } else if (type === ToolTypes.PULL_FORWARD) {
+    } else if (type === DrawingActions.PULL_FORWARD) {
       currentDrawing.pullSelectedShapesForward()
     }
   }
