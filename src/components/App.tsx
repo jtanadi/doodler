@@ -108,6 +108,8 @@ const App: React.FC<{}> = (): ReactElement => {
   }, [drawings.length])
 
   const handleHistory = (action?: HistoryActions): void => {
+    // Implementation based on https://redux.js.org/recipes/implementing-undo-history/
+
     const currentDrawing = drawings[drawings.length - 1]
     const dwgHistory = appHistory[currentDrawing.id]
 
