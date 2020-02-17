@@ -6,7 +6,7 @@ import WindowBar from "../WindowBar"
 
 type PropTypes = {
   children: ReactNodeArray | ReactNode
-  useDraggable: boolean
+  useDraggable?: boolean
   contentWidth: number
   contentHeight: number
   top?: number

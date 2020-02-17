@@ -1,34 +1,34 @@
 import Gambar from "gambar"
 import { Point, StyleProps } from "gambar/src/geometry"
 import { getDiamondPoints } from "./getShapePoints"
-import { ToolTypes } from "./tools"
+import { DrawingToolTypes } from "./tools"
 
 const drawShapes = (
   dwg: Gambar,
-  type: ToolTypes,
+  type: DrawingToolTypes,
   start: Point,
   end: Point,
   style: StyleProps,
   save: boolean
 ): void => {
   switch (type) {
-    case ToolTypes.SELECTION:
+    case DrawingToolTypes.SELECTION:
       if (!save) {
         dwg.rectangle(start, end, { fillColor: "rgba(0, 0, 100, 0.15)" }, save)
       } else {
         dwg.render()
       }
       break
-    case ToolTypes.RECTANGLE:
+    case DrawingToolTypes.RECTANGLE:
       dwg.rectangle(start, end, style, save)
       break
-    case ToolTypes.ELLIPSE:
+    case DrawingToolTypes.ELLIPSE:
       dwg.ellipse(start, end, style, save)
       break
-    case ToolTypes.LINE:
+    case DrawingToolTypes.LINE:
       dwg.line(start, end, style, save)
       break
-    case ToolTypes.DIAMOND: {
+    case DrawingToolTypes.DIAMOND: {
       const diamondPts: Point[] = getDiamondPoints(start, end)
       dwg.polygon(diamondPts, style, save)
       break

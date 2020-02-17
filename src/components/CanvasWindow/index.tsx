@@ -5,7 +5,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react"
-import { ToolTypes } from "../../utils"
+import { DrawingToolTypes, HistoryActions } from "../../utils"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
 
@@ -17,13 +17,14 @@ type PropTypes = {
   isCurrent: boolean
   canvasWidth: number
   canvasHeight: number
-  currentTool: ToolTypes
+  currentTool: DrawingToolTypes
   strokeColor: string
   fillColor: string
   selectedShapes: [Shape, number][]
   windowTopLocation?: number
   windowLeftLocation?: number
   setSelectedShapes: Dispatch<SetStateAction<[Shape, number][]>>
+  handleHistory(action?: HistoryActions): void
   handleCurrentDrawing(id: string): void
 }
 
@@ -39,6 +40,7 @@ const CanvasWindow: React.FC<PropTypes> = ({
   windowTopLocation,
   windowLeftLocation,
   setSelectedShapes,
+  handleHistory,
   handleCurrentDrawing,
 }): ReactElement => {
   const canvasRef = useRef(null)
@@ -66,6 +68,7 @@ const CanvasWindow: React.FC<PropTypes> = ({
     >
       <Canvas
         drawing={drawing}
+        handleHistory={handleHistory}
         currentTool={currentTool}
         width={canvasWidth}
         height={canvasHeight}

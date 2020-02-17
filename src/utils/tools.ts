@@ -1,19 +1,25 @@
-enum ToolTypes {
-  SELECTION = "selection",
-  DIAMOND = "diamond",
-  ELLIPSE = "ellipse",
-  LINE = "line",
-  POLYGON = "polygon",
-  POLYLINE = "polyline",
-  RECTANGLE = "rectangle",
-  UNDO = "undo",
-  REDO = "redo",
-  PUSH_BACKWARD = "pushBackward",
-  PULL_FORWARD = "pullForward",
+enum DrawingToolTypes {
+  SELECTION = "SELECTION",
+  DIAMOND = "DIAMOND",
+  ELLIPSE = "ELLIPSE",
+  LINE = "LINE",
+  POLYGON = "POLYGON",
+  POLYLINE = "POLYLINE",
+  RECTANGLE = "RECTANGLE",
+}
+
+enum HistoryActions {
+  UNDO = "UNDO",
+  REDO = "REDO",
+}
+
+enum LayerActions {
+  PUSH_BACKWARD = "PUSH_BACKWARD",
+  PULL_FORWARD = "PULL_FORWARD",
 }
 
 type Tool = {
-  type: ToolTypes
+  type: DrawingToolTypes | HistoryActions | LayerActions
   icon: string
   selectedIcon?: string
 }
@@ -21,27 +27,27 @@ type Tool = {
 const drawingTools: Tool[] = [
   null,
   {
-    type: ToolTypes.SELECTION,
+    type: DrawingToolTypes.SELECTION,
     icon: "👆️",
   },
   {
-    type: ToolTypes.RECTANGLE,
+    type: DrawingToolTypes.RECTANGLE,
     icon: "🔲️",
   },
   {
-    type: ToolTypes.ELLIPSE,
+    type: DrawingToolTypes.ELLIPSE,
     icon: "🔵️",
   },
   {
-    type: ToolTypes.LINE,
+    type: DrawingToolTypes.LINE,
     icon: "➖️",
   },
   {
-    type: ToolTypes.DIAMOND,
+    type: DrawingToolTypes.DIAMOND,
     icon: "🔷️",
   },
   {
-    type: ToolTypes.POLYLINE,
+    type: DrawingToolTypes.POLYLINE,
     icon: "6",
   },
 ]
@@ -49,11 +55,11 @@ const drawingTools: Tool[] = [
 const historyTools: Tool[] = [
   null,
   {
-    type: ToolTypes.UNDO,
+    type: HistoryActions.UNDO,
     icon: "↶",
   },
   {
-    type: ToolTypes.REDO,
+    type: HistoryActions.REDO,
     icon: "↷",
   },
 ]
@@ -61,13 +67,21 @@ const historyTools: Tool[] = [
 const layerTools: Tool[] = [
   null,
   {
-    type: ToolTypes.PUSH_BACKWARD,
+    type: LayerActions.PUSH_BACKWARD,
     icon: "🔽️",
   },
   {
-    type: ToolTypes.PULL_FORWARD,
+    type: LayerActions.PULL_FORWARD,
     icon: "🔼️",
   },
 ]
 
-export { ToolTypes, Tool, drawingTools, historyTools, layerTools }
+export {
+  DrawingToolTypes,
+  HistoryActions,
+  LayerActions,
+  Tool,
+  drawingTools,
+  historyTools,
+  layerTools,
+}

@@ -2,18 +2,19 @@ import React, { useState, ReactElement, MouseEvent, RefObject } from "react"
 import Gambar from "gambar"
 import { Point, StyleProps, Shape } from "gambar/src/geometry"
 
-import { ToolTypes, drawShapes } from "../../utils/"
+import { DrawingToolTypes, drawShapes, HistoryActions } from "../../utils/"
 
 type PropTypes = {
   canvasRef: RefObject<HTMLCanvasElement>
   drawing: Gambar
-  currentTool: ToolTypes
+  currentTool: DrawingToolTypes
   width: number
   height: number
   fillColor: string
   strokeColor: string
   selectedShapes: [Shape, number][]
   onSelectShapes([shape, i]): void
+  handleHistory(action?: HistoryActions): void
 }
 
 const Canvas: React.FC<PropTypes> = ({
@@ -26,6 +27,7 @@ const Canvas: React.FC<PropTypes> = ({
   strokeColor,
   selectedShapes,
   onSelectShapes,
+  handleHistory,
 }): ReactElement => {
   const [mouseDown, setMouseDown] = useState(false)
   const [startPoint, setStartPoint] = useState(new Point(0, 0))
@@ -38,7 +40,7 @@ const Canvas: React.FC<PropTypes> = ({
     const pt = new Point(x, y)
 
     setMouseDown(true)
-    if (currentTool === ToolTypes.SELECTION) {
+    if (currentTool === DrawingToolTypes.SELECTION) {
       drawing.selectShapeAtPoint(pt)
     }
 
@@ -53,7 +55,7 @@ const Canvas: React.FC<PropTypes> = ({
 
     setEndPoint(new Point(ev.nativeEvent.offsetX, ev.nativeEvent.offsetY))
 
-    if (currentTool === ToolTypes.SELECTION && selectedShapes.length) {
+    if (currentTool === DrawingToolTypes.SELECTION && selectedShapes.length) {
       const delta = new Point(
         endPoint.x - startPoint.x,
         endPoint.y - startPoint.y
@@ -86,6 +88,16 @@ const Canvas: React.FC<PropTypes> = ({
     }
 
     drawShapes(drawing, currentTool, startPoint, endPoint, drawingStyle, true)
+
+    // Canvas only keeps track of history if something is drawn
+    // Layer and color history is taken care of by App
+    if (
+      currentTool !== DrawingToolTypes.SELECTION &&
+      startPoint.x !== endPoint.x &&
+      startPoint.y !== endPoint.y
+    ) {
+      handleHistory()
+    }
 
     setMouseDown(false)
     setStartPoint(new Point(0, 0))
