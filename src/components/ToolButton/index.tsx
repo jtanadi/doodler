@@ -1,12 +1,17 @@
 import React, { ReactElement } from "react"
 
 import StyledToolButton from "./styles"
-import { Tool } from "../../utils/"
+import {
+  Tool,
+  HistoryActions,
+  LayerActions,
+  DrawingToolTypes,
+} from "../../utils/"
 
 type PropTypes = {
   tool: Tool
   currentTool?: string
-  handleButton(type?: string): void
+  handleButton(type?: HistoryActions | LayerActions | DrawingToolTypes): void
 }
 
 const ToolButton: React.FC<PropTypes> = ({

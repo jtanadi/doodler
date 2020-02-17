@@ -1,22 +1,25 @@
 enum DrawingToolTypes {
-  SELECTION = "selection",
-  DIAMOND = "diamond",
-  ELLIPSE = "ellipse",
-  LINE = "line",
-  POLYGON = "polygon",
-  POLYLINE = "polyline",
-  RECTANGLE = "rectangle",
+  SELECTION = "SELECTION",
+  DIAMOND = "DIAMOND",
+  ELLIPSE = "ELLIPSE",
+  LINE = "LINE",
+  POLYGON = "POLYGON",
+  POLYLINE = "POLYLINE",
+  RECTANGLE = "RECTANGLE",
 }
 
-enum DrawingActions {
-  UNDO = "undo",
-  REDO = "redo",
-  PUSH_BACKWARD = "pushBackward",
-  PULL_FORWARD = "pullForward",
+enum HistoryActions {
+  UNDO = "UNDO",
+  REDO = "REDO",
+}
+
+enum LayerActions {
+  PUSH_BACKWARD = "PUSH_BACKWARD",
+  PULL_FORWARD = "PULL_FORWARD",
 }
 
 type Tool = {
-  type: DrawingToolTypes | DrawingActions
+  type: DrawingToolTypes | HistoryActions | LayerActions
   icon: string
   selectedIcon?: string
 }
@@ -52,11 +55,11 @@ const drawingTools: Tool[] = [
 const historyTools: Tool[] = [
   null,
   {
-    type: DrawingActions.UNDO,
+    type: HistoryActions.UNDO,
     icon: "↶",
   },
   {
-    type: DrawingActions.REDO,
+    type: HistoryActions.REDO,
     icon: "↷",
   },
 ]
@@ -64,18 +67,19 @@ const historyTools: Tool[] = [
 const layerTools: Tool[] = [
   null,
   {
-    type: DrawingActions.PUSH_BACKWARD,
+    type: LayerActions.PUSH_BACKWARD,
     icon: "🔽️",
   },
   {
-    type: DrawingActions.PULL_FORWARD,
+    type: LayerActions.PULL_FORWARD,
     icon: "🔼️",
   },
 ]
 
 export {
   DrawingToolTypes,
-  DrawingActions,
+  HistoryActions,
+  LayerActions,
   Tool,
   drawingTools,
   historyTools,

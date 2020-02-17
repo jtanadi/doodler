@@ -9,7 +9,8 @@ import ColorPickerContainer from "../ColorPickerContainer"
 import { Popover, PaletteWrapper } from "./styles"
 import {
   DrawingToolTypes,
-  DrawingActions,
+  HistoryActions,
+  LayerActions,
   drawingTools,
   historyTools,
   layerTools,
@@ -22,8 +23,8 @@ type PropTypes = {
   displayFillPicker: boolean
   displayStrokePicker: boolean
   pickTool(type: DrawingToolTypes): void
-  changeHistory(type: DrawingActions): void
-  changeLayerOrder(type: DrawingActions): void
+  changeHistory(action: HistoryActions): void
+  changeLayerOrder(action: LayerActions): void
   onFillColorChange(color): void
   onStrokeColorChange(color): void
   onFillColorClick(): void

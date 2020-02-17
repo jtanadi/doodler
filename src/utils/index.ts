@@ -2,7 +2,8 @@ import drawShapes from "./drawShapes"
 import { getDiamondPoints, getTrianglePoints } from "./getShapePoints"
 import {
   DrawingToolTypes,
-  DrawingActions,
+  HistoryActions,
+  LayerActions,
   Tool,
   drawingTools,
   historyTools,
@@ -15,10 +16,11 @@ export {
   drawShapes,
   getDiamondPoints,
   getTrianglePoints,
-  DrawingActions,
   Tool,
   drawingTools,
+  HistoryActions,
   historyTools,
+  LayerActions,
   parseColor,
   boundingBoxStyle,
 }
