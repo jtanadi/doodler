@@ -23,7 +23,7 @@ type PropTypes = {
   displayFillPicker: boolean
   displayStrokePicker: boolean
   pickTool(type: DrawingToolTypes): void
-  changeHistory(action: HistoryActions): void
+  handleHistory(action: HistoryActions): void
   changeLayerOrder(action: LayerActions): void
   onFillColorChange(color): void
   onStrokeColorChange(color): void
@@ -38,7 +38,7 @@ const ToolPalette: React.FC<PropTypes> = ({
   displayFillPicker,
   displayStrokePicker,
   pickTool,
-  changeHistory,
+  handleHistory,
   changeLayerOrder,
   onFillColorChange,
   onStrokeColorChange,
@@ -56,7 +56,7 @@ const ToolPalette: React.FC<PropTypes> = ({
           />
           <ToolButtonsContainer
             tools={historyTools}
-            handleButton={changeHistory}
+            handleButton={handleHistory}
           />
           <ToolButtonsContainer
             tools={layerTools}
