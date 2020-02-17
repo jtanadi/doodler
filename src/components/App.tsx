@@ -11,11 +11,11 @@ import AddButton from "./AddButton"
 import {
   boundingBoxStyle,
   DrawingToolTypes,
-  DrawingActions,
+  HistoryActions,
+  LayerActions,
   parseColor,
 } from "../utils"
 
-const HISTORY = []
 const DEFAULT_CANVAS_WIDTH = 600
 const DEFAULT_CANVAS_HEIGHT = 400
 
@@ -81,30 +81,90 @@ const App: React.FC<{}> = (): ReactElement => {
     setCurrentTool(type)
   }
 
-  const handleChangeHistory = (type: DrawingActions): void => {
-    const currentDrawing = drawings[drawings.length - 1]
-
-    if (type === DrawingActions.UNDO) {
-      const shape = currentDrawing.popShape()
-      if (shape) {
-        HISTORY.push(shape)
-      }
-    } else if (type === DrawingActions.REDO) {
-      const shape = HISTORY.pop()
-      if (shape) {
-        currentDrawing.pushShape(shape)
-      }
-    }
+  type DrawingHistory = {
+    past: Array<Shape[]>
+    present: Shape[]
+    future: Array<Shape[]>
   }
 
-  const handleChangeLayerOrder = (type: DrawingActions): void => {
+  const initialHistory: DrawingHistory = {
+    past: [],
+    present: [],
+    future: [],
+  }
+
+  const [appHistory, setAppHistory] = useState({})
+  useEffect(() => {
+    if (!drawings.length) return
+    setAppHistory(prev => {
+      const initial = drawings.reduce((acc, drawing) => {
+        if (!acc[drawing.id]) {
+          return { ...acc, [drawing.id]: initialHistory }
+        }
+        return acc
+      }, prev)
+      return initial
+    })
+  }, [drawings.length])
+
+  const handleHistory = (action?: HistoryActions): void => {
+    const currentDrawing = drawings[drawings.length - 1]
+    const dwgHistory = appHistory[currentDrawing.id]
+
+    let newHistory: DrawingHistory
+    if (action === HistoryActions.UNDO) {
+      const newPresent: Shape[] = dwgHistory.past[dwgHistory.past.length - 1]
+      if (!newPresent) return
+
+      const newPast: Array<Shape[]> = dwgHistory.past.slice(
+        0,
+        dwgHistory.past.length - 1
+      )
+
+      newHistory = {
+        past: newPast,
+        present: newPresent,
+        future: [dwgHistory.present, ...dwgHistory.future],
+      }
+
+      currentDrawing.shapes = [...newPresent]
+      currentDrawing.render()
+    } else if (action === HistoryActions.REDO) {
+      const newPresent: Shape[] = dwgHistory.future[0]
+      if (!newPresent) return
+
+      const newFuture: Array<Shape[]> = dwgHistory.future.slice(1)
+
+      newHistory = {
+        past: [...dwgHistory.past, dwgHistory.present],
+        present: newPresent,
+        future: newFuture,
+      }
+
+      currentDrawing.shapes = [...newPresent]
+      currentDrawing.render()
+    } else {
+      newHistory = {
+        past: [...dwgHistory.past, [...dwgHistory.present]],
+        present: [...currentDrawing.shapes],
+        future: [],
+      }
+    }
+    setAppHistory(prev => {
+      prev[currentDrawing.id] = newHistory
+      return prev
+    })
+  }
+
+  const handleChangeLayerOrder = (type: LayerActions): void => {
     const currentDrawing = drawings[drawings.length - 1]
 
-    if (type === DrawingActions.PUSH_BACKWARD) {
+    if (type === LayerActions.PUSH_BACKWARD) {
       currentDrawing.pushSelectedShapesBackward()
-    } else if (type === DrawingActions.PULL_FORWARD) {
+    } else if (type === LayerActions.PULL_FORWARD) {
       currentDrawing.pullSelectedShapesForward()
     }
+    handleHistory()
   }
 
   const [selectedShapes, setSelectedShapes] = useState<[Shape, number][]>([])
@@ -187,7 +247,7 @@ const App: React.FC<{}> = (): ReactElement => {
       <ToolPalette
         currentTool={currentTool}
         pickTool={handlePickTool}
-        changeHistory={handleChangeHistory}
+        handleHistory={handleHistory}
         changeLayerOrder={handleChangeLayerOrder}
         fillColor={currentFillColor}
         strokeColor={currentStrokeColor}
@@ -205,6 +265,7 @@ const App: React.FC<{}> = (): ReactElement => {
         <CanvasWindow
           key={drawing.id}
           drawing={drawing}
+          handleHistory={handleHistory}
           isCurrent={i === drawings.length - 1}
           canvasWidth={DEFAULT_CANVAS_WIDTH}
           canvasHeight={DEFAULT_CANVAS_HEIGHT}

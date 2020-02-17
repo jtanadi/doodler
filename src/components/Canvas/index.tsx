@@ -2,7 +2,7 @@ import React, { useState, ReactElement, MouseEvent, RefObject } from "react"
 import Gambar from "gambar"
 import { Point, StyleProps, Shape } from "gambar/src/geometry"
 
-import { DrawingToolTypes, drawShapes } from "../../utils/"
+import { DrawingToolTypes, drawShapes, HistoryActions } from "../../utils/"
 
 type PropTypes = {
   canvasRef: RefObject<HTMLCanvasElement>
@@ -14,6 +14,7 @@ type PropTypes = {
   strokeColor: string
   selectedShapes: [Shape, number][]
   onSelectShapes([shape, i]): void
+  handleHistory(action?: HistoryActions): void
 }
 
 const Canvas: React.FC<PropTypes> = ({
@@ -26,6 +27,7 @@ const Canvas: React.FC<PropTypes> = ({
   strokeColor,
   selectedShapes,
   onSelectShapes,
+  handleHistory,
 }): ReactElement => {
   const [mouseDown, setMouseDown] = useState(false)
   const [startPoint, setStartPoint] = useState(new Point(0, 0))
@@ -86,6 +88,16 @@ const Canvas: React.FC<PropTypes> = ({
     }
 
     drawShapes(drawing, currentTool, startPoint, endPoint, drawingStyle, true)
+
+    // Canvas only keeps track of history if something is drawn
+    // Layer and color history is taken care of by App
+    if (
+      currentTool !== DrawingToolTypes.SELECTION &&
+      startPoint.x !== endPoint.x &&
+      startPoint.y !== endPoint.y
+    ) {
+      handleHistory()
+    }
 
     setMouseDown(false)
     setStartPoint(new Point(0, 0))
