@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react"
+import React, { ReactElement, useEffect, useState } from "react"
 import Draggable from "react-draggable"
 import { SketchPicker } from "react-color"
 
@@ -23,7 +23,7 @@ type PropTypes = {
   displayFillPicker: boolean
   displayStrokePicker: boolean
   pickTool(type: DrawingToolTypes): void
-  handleHistory(action: HistoryActions): void
+  handleHistory(action?: HistoryActions): void
   changeLayerOrder(action: LayerActions): void
   onFillColorChange(color): void
   onStrokeColorChange(color): void
@@ -45,6 +45,18 @@ const ToolPalette: React.FC<PropTypes> = ({
   onFillColorClick,
   onStrokeColorClick,
 }): ReactElement => {
+  const [firstLoad, setFirstLoad] = useState(true)
+  useEffect(() => {
+    // Only record color history when fillPicker and strokePicker
+    // aren't displayed (ie. when user is completely done picking colors)
+    // firstLoad is a bit hacky--we don't want handleHistory() to be called
+    // when this component is first loaded
+    if (!firstLoad && !displayFillPicker && !displayStrokePicker) {
+      handleHistory()
+    }
+    setFirstLoad(false)
+  }, [displayFillPicker, displayStrokePicker])
+
   return (
     <Draggable handle=".palette-bar" bounds="body">
       <PaletteWrapper>
@@ -77,11 +89,7 @@ const ToolPalette: React.FC<PropTypes> = ({
         ) : null}
         {displayStrokePicker ? (
           <Popover stroke={true.toString()}>
-            <SketchPicker
-              color={strokeColor}
-              onChange={onStrokeColorChange}
-              onChangeComplete={onStrokeColorChange}
-            />
+            <SketchPicker color={strokeColor} onChange={onStrokeColorChange} />
           </Popover>
         ) : null}
       </PaletteWrapper>
