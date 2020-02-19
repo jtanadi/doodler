@@ -3,6 +3,7 @@ import styled from "styled-components"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
 import nanoid from "nanoid"
+import _ from "lodash"
 
 import ToolPalette from "./ToolPalette"
 import CanvasWindow from "./CanvasWindow"
@@ -203,11 +204,20 @@ const App: React.FC<{}> = (): ReactElement => {
     if (!selectedShapes.length) {
       setAppFillColor(rgba)
     } else {
-      // maybe not the right way of doing this
+      // Maybe not the right way of doing this
       // or not the right place for this
-      for (const [shape] of selectedShapes) {
-        shape.fillColor = rgba
-      }
+      // See if this should be handled by Gambar
+      const currentDrawing = drawings[drawings.length - 1]
+      currentDrawing.shapes = currentDrawing.shapes.map(shape => {
+        if (shape.selected) {
+          // To keep track of history, we have to make a copy
+          // of objects with new fillColor
+          const newShape = _.cloneDeep(shape)
+          newShape.fillColor = rgba
+          return newShape
+        }
+        return shape
+      })
     }
     setCurrentFillColor(rgba)
   }
@@ -217,11 +227,16 @@ const App: React.FC<{}> = (): ReactElement => {
     if (!selectedShapes.length) {
       setAppStrokeColor(rgba)
     } else {
-      // maybe not the right way of doing this
-      // or not the right place for this
-      for (const [shape] of selectedShapes) {
-        shape.strokeColor = rgba
-      }
+      // Same note as handleFillColor
+      const currentDrawing = drawings[drawings.length - 1]
+      currentDrawing.shapes = currentDrawing.shapes.map(shape => {
+        if (shape.selected) {
+          const newShape = _.cloneDeep(shape)
+          newShape.strokeColor = rgba
+          return newShape
+        }
+        return shape
+      })
     }
     setCurrentStrokeColor(rgba)
   }
