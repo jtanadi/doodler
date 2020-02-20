@@ -5,29 +5,3 @@ Doodler is a small multi-window drawing app written in TypeScript. The app uses 
 It's very much still a work-in-progres, but can be viewed [here](https://doodler-js.herokuapp.com).
 
 ![screenshot](./docs/doodler3.png)
-
-### Dev Notes
-
-- Data model, so app state can be saved and loaded from localStorage:
-```
-{
-    appName: string,
-    version: string,
-    savedDate: number,
-    palette: {
-        positionX: number,
-        positionY: number,
-        minimized: boolean
-    },
-    drawingObjects: [
-        {
-            shape: string,
-            coordinates: [[x1, y1], [x2, y2], ...]
-        },
-        {
-            shape: string,
-            coordinates: [[x1, y1], [x2, y2], ...]
-        }
-    ]
-}
-```
