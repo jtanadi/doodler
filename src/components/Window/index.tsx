@@ -19,7 +19,7 @@ type PropTypes = {
   top?: number
   left?: number
   current?: boolean
-  handleClick?(): void
+  handleClick?(ev: MouseEvent): void
   handleClose?(ev: MouseEvent): void
 }
 

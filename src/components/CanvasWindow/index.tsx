@@ -27,7 +27,7 @@ type PropTypes = {
   windowLeftLocation?: number
   setSelectedShapes: Dispatch<SetStateAction<[Shape, number][]>>
   handleHistory(action?: HistoryActions): void
-  handleCurrentDrawing(id: string): void
+  handleCurrentDrawing(ev: MouseEvent, id: string): void
   handleClose(ev: MouseEvent): void
 }
 
@@ -67,7 +67,7 @@ const CanvasWindow: React.FC<PropTypes> = ({
       useDraggable
       contentWidth={canvasWidth / 16}
       contentHeight={canvasHeight / 16}
-      handleClick={(): void => handleCurrentDrawing(id)}
+      handleClick={(ev: MouseEvent): void => handleCurrentDrawing(ev, id)}
       top={windowTopLocation || 3}
       left={windowLeftLocation || 6}
       current={current}

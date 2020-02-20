@@ -63,8 +63,13 @@ const App: React.FC<{}> = (): ReactElement => {
     }
   }, [])
 
-  const handleCurrentDrawing = (id: string): void => {
-    // Top most drawing is current drawing
+  const handleCurrentDrawing = (ev: MouseEvent, id: string): void => {
+    // If either minimize or close button is clicked,
+    // don't make window current (just perform button action)
+    const target = ev.target as HTMLElement
+    if (target.nodeName === "BUTTON") return
+
+    // Top most drawing is already current drawing
     const currentDrawing = drawings[drawings.length - 1]
     if (id === currentDrawing.id) return
 
