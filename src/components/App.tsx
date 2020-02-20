@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement } from "react"
+import React, { useState, useEffect, ReactElement, MouseEvent } from "react"
 import styled from "styled-components"
 import Gambar from "gambar"
 import { Shape } from "gambar/src/geometry"
@@ -75,6 +75,18 @@ const App: React.FC<{}> = (): ReactElement => {
       prev.splice(newCurrentIdx, 1)
       return [...prev, newCurrentDwg]
     })
+  }
+
+  const handleCloseDrawing = (ev: MouseEvent): void => {
+    // Get button and find its grandparent (window),
+    // which has id set to drawing.id
+    // Kind of janky?
+    const button = ev.target as HTMLElement
+    const idToClose = button.parentElement.parentElement.id
+
+    setDrawings(drawings =>
+      drawings.filter(drawing => drawing.id !== idToClose)
+    )
   }
 
   const [currentTool, setCurrentTool] = useState(DrawingToolTypes.SELECTION)
@@ -281,6 +293,7 @@ const App: React.FC<{}> = (): ReactElement => {
       {drawings.map((drawing, i) => (
         <CanvasWindow
           key={drawing.id}
+          id={drawing.id}
           drawing={drawing}
           handleHistory={handleHistory}
           isCurrent={i === drawings.length - 1}
@@ -294,6 +307,7 @@ const App: React.FC<{}> = (): ReactElement => {
           handleCurrentDrawing={handleCurrentDrawing}
           windowTopLocation={drawing.top}
           windowLeftLocation={drawing.left}
+          handleClose={handleCloseDrawing}
         />
       ))}
       <AddButton handleAdd={handleAddDrawing} />

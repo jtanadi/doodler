@@ -4,6 +4,7 @@ import React, {
   ReactElement,
   Dispatch,
   SetStateAction,
+  MouseEvent,
 } from "react"
 import { DrawingToolTypes, HistoryActions } from "../../utils"
 import Gambar from "gambar"
@@ -13,6 +14,7 @@ import Window from "../Window"
 import Canvas from "../Canvas"
 
 type PropTypes = {
+  id: string
   drawing: Gambar
   isCurrent: boolean
   canvasWidth: number
@@ -26,9 +28,11 @@ type PropTypes = {
   setSelectedShapes: Dispatch<SetStateAction<[Shape, number][]>>
   handleHistory(action?: HistoryActions): void
   handleCurrentDrawing(id: string): void
+  handleClose(ev: MouseEvent): void
 }
 
 const CanvasWindow: React.FC<PropTypes> = ({
+  id,
   drawing,
   isCurrent: current,
   canvasWidth,
@@ -42,6 +46,7 @@ const CanvasWindow: React.FC<PropTypes> = ({
   setSelectedShapes,
   handleHistory,
   handleCurrentDrawing,
+  handleClose,
 }): ReactElement => {
   const canvasRef = useRef(null)
 
@@ -58,13 +63,15 @@ const CanvasWindow: React.FC<PropTypes> = ({
 
   return (
     <Window
+      id={id}
       useDraggable
       contentWidth={canvasWidth / 16}
       contentHeight={canvasHeight / 16}
-      handleClick={(): void => handleCurrentDrawing(drawing.id)}
+      handleClick={(): void => handleCurrentDrawing(id)}
       top={windowTopLocation || 3}
       left={windowLeftLocation || 6}
       current={current}
+      handleClose={handleClose}
     >
       <Canvas
         drawing={drawing}
