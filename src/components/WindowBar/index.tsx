@@ -1,15 +1,22 @@
 import React, { ReactElement, MouseEvent } from "react"
-import { StyledBar, StyledMinimizeBtn } from "./styles"
+import { Bar, MinimizeButton, CloseButton } from "./styles"
 
 type PropTypes = {
-  onClick(e: MouseEvent): void
+  closable?: boolean
+  handleMinimize(e: MouseEvent): void
+  handleClose?(e: MouseEvent): void
 }
 
-const WindowBar: React.FC<PropTypes> = ({ onClick }): ReactElement => {
+const WindowBar: React.FC<PropTypes> = ({
+  closable,
+  handleMinimize,
+  handleClose,
+}): ReactElement => {
   return (
-    <StyledBar className="palette-bar">
-      <StyledMinimizeBtn onClick={onClick} />
-    </StyledBar>
+    <Bar className="palette-bar">
+      <MinimizeButton onClick={handleMinimize} />
+      {closable ? <CloseButton onClick={handleClose} /> : null}
+    </Bar>
   )
 }
 

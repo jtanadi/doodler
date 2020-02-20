@@ -1,10 +1,17 @@
-import React, { useState, ReactElement, ReactNodeArray, ReactNode } from "react"
+import React, {
+  useState,
+  ReactElement,
+  ReactNodeArray,
+  ReactNode,
+  MouseEvent,
+} from "react"
 import Draggable from "react-draggable"
 
 import { StyledWindow } from "./styles"
 import WindowBar from "../WindowBar"
 
 type PropTypes = {
+  id?: string
   children: ReactNodeArray | ReactNode
   useDraggable?: boolean
   contentWidth: number
@@ -12,10 +19,12 @@ type PropTypes = {
   top?: number
   left?: number
   current?: boolean
-  handleClick?(): void
+  handleClick?(ev: MouseEvent): void
+  handleClose?(ev: MouseEvent): void
 }
 
 const Window: React.FC<PropTypes> = ({
+  id,
   useDraggable,
   children,
   contentWidth,
@@ -24,6 +33,7 @@ const Window: React.FC<PropTypes> = ({
   left,
   current,
   handleClick,
+  handleClose,
 }): ReactElement => {
   const [open, setOpen] = useState(true)
   const handleMinimize = (): void => setOpen(prevState => !prevState)
@@ -32,6 +42,7 @@ const Window: React.FC<PropTypes> = ({
     return (
       <Draggable handle=".palette-bar" bounds="body">
         <StyledWindow
+          id={id}
           open={open}
           absolutePosition={true}
           contentWidth={contentWidth}
@@ -41,7 +52,11 @@ const Window: React.FC<PropTypes> = ({
           left={left}
           current={current}
         >
-          <WindowBar onClick={handleMinimize} />
+          <WindowBar
+            closable
+            handleMinimize={handleMinimize}
+            handleClose={handleClose}
+          />
           {children}
         </StyledWindow>
       </Draggable>
@@ -54,7 +69,7 @@ const Window: React.FC<PropTypes> = ({
       contentWidth={contentWidth}
       contentHeight={contentHeight}
     >
-      <WindowBar onClick={handleMinimize} />
+      <WindowBar handleMinimize={handleMinimize} />
       {children}
     </StyledWindow>
   )
