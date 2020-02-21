@@ -34,7 +34,7 @@ type PropTypes = {
 const CanvasWindow: React.FC<PropTypes> = ({
   id,
   drawing,
-  isCurrent: current,
+  isCurrent,
   canvasWidth,
   canvasHeight,
   currentTool,
@@ -61,6 +61,28 @@ const CanvasWindow: React.FC<PropTypes> = ({
     }
   }, [strokeColor, fillColor])
 
+  useEffect(() => {
+    window.addEventListener("keydown", keydown)
+    return () => {
+      window.removeEventListener("keydown", keydown)
+    }
+  }, [isCurrent])
+
+  const keydown = (ev: KeyboardEvent): void => {
+    switch (ev.keyCode) {
+      case 8:
+        handleDelete()
+    }
+  }
+
+  const handleDelete = () => {
+    if (!isCurrent) return
+    drawing.deleteSelectedShapes()
+
+    // Doesn't quite work for some reason
+    // handleHistory()
+  }
+
   return (
     <Window
       id={id}
@@ -70,7 +92,6 @@ const CanvasWindow: React.FC<PropTypes> = ({
       handleClick={(ev: MouseEvent): void => handleCurrentDrawing(ev, id)}
       top={windowTopLocation || 3}
       left={windowLeftLocation || 6}
-      current={current}
       handleClose={handleClose}
     >
       <Canvas
