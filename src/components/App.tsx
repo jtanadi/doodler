@@ -40,20 +40,6 @@ const App: React.FC<{}> = (): ReactElement => {
     })
   }
 
-  const keydown = (ev: KeyboardEvent): void => {
-    switch (ev.keyCode) {
-      // backspace
-      case 8:
-        console.warn("delete not yet implemented")
-        break
-
-      // cap N
-      case 78:
-        handleAddDrawing()
-        break
-    }
-  }
-
   useEffect(() => {
     handleAddDrawing()
     window.addEventListener("keydown", keydown)
@@ -62,6 +48,15 @@ const App: React.FC<{}> = (): ReactElement => {
       window.removeEventListener("keydown", keydown)
     }
   }, [])
+
+  const keydown = (ev: KeyboardEvent): void => {
+    switch (ev.keyCode) {
+      // cap N
+      case 78:
+        handleAddDrawing()
+        break
+    }
+  }
 
   const handleCurrentDrawing = (ev: MouseEvent, id: string): void => {
     // If either minimize or close button is clicked,
