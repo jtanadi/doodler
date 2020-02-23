@@ -5,6 +5,7 @@ import { Shape } from "gambar/src/geometry"
 import nanoid from "nanoid"
 import _ from "lodash"
 
+import HelpWindow from "./HelpWindow"
 import ToolPalette from "./ToolPalette"
 import CanvasWindow from "./CanvasWindow"
 import RoundButton from "./RoundButton"
@@ -197,12 +198,12 @@ const App: React.FC<{}> = (): ReactElement => {
 
       // 4 (not num pad)
       case 52:
-        handlePickTool(DrawingToolTypes.LINE)
+        handlePickTool(DrawingToolTypes.DIAMOND)
         break
 
       // 5 (not num pad)
       case 53:
-        handlePickTool(DrawingToolTypes.DIAMOND)
+        handlePickTool(DrawingToolTypes.LINE)
         break
 
       // 6 (not num pad)
@@ -353,12 +354,17 @@ const App: React.FC<{}> = (): ReactElement => {
     setDisplayStrokePicker(false)
   }
 
+  const [displayHelp, setDisplayHelp] = useState(false)
   const handleHelp = (): void => {
-    console.log("help")
+    setDisplayHelp(display => !display)
   }
 
   return (
     <>
+      {displayHelp ? (
+        <HelpWindow handleClose={(): void => handleHelp()} />
+      ) : null}
+
       <ToolPalette
         currentTool={currentTool}
         pickTool={handlePickTool}
@@ -373,9 +379,11 @@ const App: React.FC<{}> = (): ReactElement => {
         displayStrokePicker={displayStrokePicker}
         onStrokeColorClick={handleStrokeClick}
       />
+
       {displayFillPicker || displayStrokePicker ? (
         <Cover onClick={handleCloseCover} />
       ) : null}
+
       {drawings.map(drawing => (
         <CanvasWindow
           key={drawing.id}
@@ -395,6 +403,7 @@ const App: React.FC<{}> = (): ReactElement => {
           handleClose={handleCloseDrawing}
         />
       ))}
+
       <RoundButton top="1.5rem" right="1.5rem" onClick={handleHelp}>
         ?
       </RoundButton>
