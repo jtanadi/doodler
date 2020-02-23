@@ -248,6 +248,7 @@ const App: React.FC<{}> = (): ReactElement => {
         if (shape.selected) {
           // To keep track of history, we have to make a copy
           // of objects with new fillColor
+          // TODO: Use immutable.js
           const newShape = _.cloneDeep(shape)
           newShape.fillColor = rgba
           return newShape
