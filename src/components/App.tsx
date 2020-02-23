@@ -361,9 +361,7 @@ const App: React.FC<{}> = (): ReactElement => {
 
   return (
     <>
-      {displayHelp ? (
-        <HelpWindow handleClose={(): void => handleHelp()} />
-      ) : null}
+      {displayHelp && <HelpWindow handleClose={(): void => handleHelp()} />}
 
       <ToolPalette
         currentTool={currentTool}
