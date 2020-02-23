@@ -7,7 +7,7 @@ import _ from "lodash"
 
 import ToolPalette from "./ToolPalette"
 import CanvasWindow from "./CanvasWindow"
-import AddButton from "./AddButton"
+import RoundButton from "./RoundButton"
 
 import {
   boundingBoxStyle,
@@ -353,6 +353,10 @@ const App: React.FC<{}> = (): ReactElement => {
     setDisplayStrokePicker(false)
   }
 
+  const handleHelp = (): void => {
+    console.log("help")
+  }
+
   return (
     <>
       <ToolPalette
@@ -391,7 +395,12 @@ const App: React.FC<{}> = (): ReactElement => {
           handleClose={handleCloseDrawing}
         />
       ))}
-      <AddButton handleAdd={handleAddDrawing} />
+      <RoundButton top="1.5rem" right="1.5rem" onClick={handleHelp}>
+        ?
+      </RoundButton>
+      <RoundButton bottom="1.5rem" right="1.5rem" onClick={handleAddDrawing}>
+        +
+      </RoundButton>
     </>
   )
 }
