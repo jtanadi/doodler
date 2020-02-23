@@ -40,24 +40,6 @@ const App: React.FC<{}> = (): ReactElement => {
     })
   }
 
-  const keydownHandler = (ev: KeyboardEvent): void => {
-    switch (ev.keyCode) {
-      // cap N
-      case 78:
-        handleAddDrawing()
-        break
-    }
-  }
-
-  useEffect(() => {
-    handleAddDrawing()
-    document.addEventListener("keydown", keydownHandler)
-
-    return (): void => {
-      document.removeEventListener("keydown", keydownHandler)
-    }
-  }, [])
-
   const handleCurrentDrawing = (ev: MouseEvent, id: string): void => {
     // If either minimize or close button is clicked,
     // don't make window current (just perform button action)
@@ -178,23 +160,6 @@ const App: React.FC<{}> = (): ReactElement => {
     handleHistory()
   }
 
-  const deleteKeydownHandler = (ev: KeyboardEvent): void => {
-    // Only listen to the delete key
-    if (ev.keyCode !== 8) return
-    handleDelete()
-  }
-
-  useEffect(() => {
-    // Attach & clean up delete keydown listener every time
-    // appHistory or currentDrawing changes so we have access
-    // to the latest appHistory and currentDrawing
-    window.addEventListener("keydown", deleteKeydownHandler)
-
-    return (): void => {
-      window.removeEventListener("keydown", deleteKeydownHandler)
-    }
-  }, [appHistory, drawings[drawings.length - 1]])
-
   const handleChangeLayerOrder = (type: LayerActions): void => {
     const currentDrawing = drawings[drawings.length - 1]
 
@@ -205,6 +170,98 @@ const App: React.FC<{}> = (): ReactElement => {
     }
     handleHistory()
   }
+
+  // App-level keydown handler
+  // only initialized once, after component is mountd
+  const appKeydownHandler = (ev: KeyboardEvent): void => {
+    switch (ev.keyCode) {
+      // n
+      case 78:
+        handleAddDrawing()
+        break
+
+      // 1 (not num pad)
+      case 49:
+        handlePickTool(DrawingToolTypes.SELECTION)
+        break
+
+      // 2 (not num pad)
+      case 50:
+        handlePickTool(DrawingToolTypes.RECTANGLE)
+        break
+
+      // 3 (not num pad)
+      case 51:
+        handlePickTool(DrawingToolTypes.ELLIPSE)
+        break
+
+      // 4 (not num pad)
+      case 52:
+        handlePickTool(DrawingToolTypes.LINE)
+        break
+
+      // 5 (not num pad)
+      case 53:
+        handlePickTool(DrawingToolTypes.DIAMOND)
+        break
+
+      // 6 (not num pad)
+      case 54:
+        handlePickTool(DrawingToolTypes.POLYLINE)
+        break
+    }
+  }
+
+  // Drawing-specific keydown handler, updated every time
+  // appHistory or currentDrawing is re-initialized
+  const drawingKeydownHandler = (ev: KeyboardEvent): void => {
+    switch (ev.keyCode) {
+      // backspace
+      case 8:
+        handleDelete()
+        break
+
+      // u
+      case 85:
+        handleHistory(HistoryActions.UNDO)
+        break
+
+      // r
+      case 82:
+        handleHistory(HistoryActions.REDO)
+        break
+
+      // ]
+      case 221:
+        handleChangeLayerOrder(LayerActions.PULL_FORWARD)
+        break
+
+      // [
+      case 219:
+        handleChangeLayerOrder(LayerActions.PUSH_BACKWARD)
+        break
+    }
+  }
+
+  useEffect(() => {
+    handleAddDrawing()
+    document.addEventListener("keydown", appKeydownHandler)
+
+    return (): void => {
+      document.removeEventListener("keydown", appKeydownHandler)
+    }
+  }, [])
+
+  useEffect(() => {
+    // Attach & clean up drawing-specific keydown listener every time
+    // appHistory or currentDrawing changes so we have access
+    // to the latest appHistory and currentDrawing
+    window.addEventListener("keydown", drawingKeydownHandler)
+
+    return (): void => {
+      window.removeEventListener("keydown", drawingKeydownHandler)
+    }
+  }, [appHistory, drawings[drawings.length - 1]])
 
   const [selectedShapes, setSelectedShapes] = useState<[Shape, number][]>([])
 
@@ -248,6 +305,7 @@ const App: React.FC<{}> = (): ReactElement => {
         if (shape.selected) {
           // To keep track of history, we have to make a copy
           // of objects with new fillColor
+          // TODO: Use immutable.js
           const newShape = _.cloneDeep(shape)
           newShape.fillColor = rgba
           return newShape
