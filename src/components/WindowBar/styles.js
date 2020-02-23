@@ -18,7 +18,7 @@ const MinimizeButton = styled.button`
   box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.75),
     inset -1px -1px 1px rgba(0, 0, 0, 0.3);
 
-  :active {
+  &:active {
     background-color: gray;
     box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.3),
       inset -1px -1px 1px rgba(255, 255, 255, 0.75);
@@ -29,6 +29,12 @@ const CloseButton = styled(MinimizeButton)`
   right: 0rem;
   background-color: tomato;
   border-radius: 0.5rem;
+
+  &:active {
+    background-color: #b24531;
+    box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.3),
+      inset -1px -1px 1px rgba(255, 255, 255, 0.75);
+  }
 `
 
 export { Bar, MinimizeButton, CloseButton }
