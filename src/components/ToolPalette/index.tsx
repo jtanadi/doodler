@@ -60,7 +60,11 @@ const ToolPalette: React.FC<PropTypes> = ({
   return (
     <Draggable handle=".palette-bar" bounds="body">
       <PaletteWrapper>
-        <Window contentWidth={5} contentHeight={6 * 2.5 + 3 * 0.25}>
+        <Window
+          minimizable={true}
+          contentWidth={5}
+          contentHeight={6 * 2.5 + 3 * 0.25}
+        >
           <ToolButtonsContainer
             tools={drawingTools}
             currentTool={currentTool}
@@ -82,16 +86,16 @@ const ToolPalette: React.FC<PropTypes> = ({
           />
         </Window>
 
-        {displayFillPicker ? (
+        {displayFillPicker && (
           <Popover>
             <SketchPicker color={fillColor} onChange={onFillColorChange} />
           </Popover>
-        ) : null}
-        {displayStrokePicker ? (
+        )}
+        {displayStrokePicker && (
           <Popover stroke={true.toString()}>
             <SketchPicker color={strokeColor} onChange={onStrokeColorChange} />
           </Popover>
-        ) : null}
+        )}
       </PaletteWrapper>
     </Draggable>
   )
