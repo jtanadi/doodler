@@ -34,6 +34,12 @@ const StyledButton = styled.button`
     css`
       ${props => `right: ${props.right};`}
     `}
+
+  &:active {
+    background-color: gray;
+    box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.3),
+      inset -1px -1px 1px rgba(255, 255, 255, 0.75);
+  }
 `
 
 export { StyledButton }
