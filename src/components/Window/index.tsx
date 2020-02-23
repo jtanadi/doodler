@@ -18,7 +18,6 @@ type PropTypes = {
   contentHeight: number
   top?: number
   left?: number
-  current?: boolean
   handleClick?(ev: MouseEvent): void
   handleClose?(ev: MouseEvent): void
 }
@@ -31,7 +30,6 @@ const Window: React.FC<PropTypes> = ({
   contentHeight,
   top,
   left,
-  current,
   handleClick,
   handleClose,
 }): ReactElement => {
@@ -50,7 +48,6 @@ const Window: React.FC<PropTypes> = ({
           onClick={handleClick}
           top={top}
           left={left}
-          current={current}
         >
           <WindowBar
             closable

@@ -40,13 +40,8 @@ const App: React.FC<{}> = (): ReactElement => {
     })
   }
 
-  const keydown = (ev: KeyboardEvent): void => {
+  const keydownHandler = (ev: KeyboardEvent): void => {
     switch (ev.keyCode) {
-      // backspace
-      case 8:
-        console.warn("delete not yet implemented")
-        break
-
       // cap N
       case 78:
         handleAddDrawing()
@@ -56,10 +51,10 @@ const App: React.FC<{}> = (): ReactElement => {
 
   useEffect(() => {
     handleAddDrawing()
-    window.addEventListener("keydown", keydown)
+    document.addEventListener("keydown", keydownHandler)
 
     return (): void => {
-      window.removeEventListener("keydown", keydown)
+      document.removeEventListener("keydown", keydownHandler)
     }
   }, [])
 
@@ -127,6 +122,7 @@ const App: React.FC<{}> = (): ReactElement => {
 
   const handleHistory = (action?: HistoryActions): void => {
     // Implementation based on https://redux.js.org/recipes/implementing-undo-history/
+    // TODO: Seems like a good place to use immutable.js
 
     const currentDrawing = drawings[drawings.length - 1]
     const dwgHistory = appHistory[currentDrawing.id]
@@ -175,6 +171,29 @@ const App: React.FC<{}> = (): ReactElement => {
       return prev
     })
   }
+
+  const handleDelete = (): void => {
+    const currentDrawing = drawings[drawings.length - 1]
+    currentDrawing.deleteSelectedShapes()
+    handleHistory()
+  }
+
+  const deleteKeydownHandler = (ev: KeyboardEvent): void => {
+    // Only listen to the delete key
+    if (ev.keyCode !== 8) return
+    handleDelete()
+  }
+
+  useEffect(() => {
+    // Attach & clean up delete keydown listener every time
+    // appHistory or currentDrawing changes so we have access
+    // to the latest appHistory and currentDrawing
+    window.addEventListener("keydown", deleteKeydownHandler)
+
+    return (): void => {
+      window.removeEventListener("keydown", deleteKeydownHandler)
+    }
+  }, [appHistory, drawings[drawings.length - 1]])
 
   const handleChangeLayerOrder = (type: LayerActions): void => {
     const currentDrawing = drawings[drawings.length - 1]
@@ -295,13 +314,12 @@ const App: React.FC<{}> = (): ReactElement => {
       {displayFillPicker || displayStrokePicker ? (
         <Cover onClick={handleCloseCover} />
       ) : null}
-      {drawings.map((drawing, i) => (
+      {drawings.map(drawing => (
         <CanvasWindow
           key={drawing.id}
           id={drawing.id}
           drawing={drawing}
           handleHistory={handleHistory}
-          isCurrent={i === drawings.length - 1}
           canvasWidth={DEFAULT_CANVAS_WIDTH}
           canvasHeight={DEFAULT_CANVAS_HEIGHT}
           currentTool={currentTool}

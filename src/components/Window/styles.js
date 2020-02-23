@@ -10,7 +10,6 @@ const StyledWindow = styled.div`
   transition: height 0.5s;
   box-shadow: inset -1.5px -1.5px 1px rgba(0, 0, 0, 0.3),
     inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.75), 3px 3px 0px rgb(0, 0, 0);
-  z-index: ${props => (props.current ? 3 : 0)};
 
   ${props =>
     !props.open &&

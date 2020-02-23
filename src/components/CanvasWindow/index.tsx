@@ -16,7 +16,6 @@ import Canvas from "../Canvas"
 type PropTypes = {
   id: string
   drawing: Gambar
-  isCurrent: boolean
   canvasWidth: number
   canvasHeight: number
   currentTool: DrawingToolTypes
@@ -34,7 +33,6 @@ type PropTypes = {
 const CanvasWindow: React.FC<PropTypes> = ({
   id,
   drawing,
-  isCurrent: current,
   canvasWidth,
   canvasHeight,
   currentTool,
@@ -70,7 +68,6 @@ const CanvasWindow: React.FC<PropTypes> = ({
       handleClick={(ev: MouseEvent): void => handleCurrentDrawing(ev, id)}
       top={windowTopLocation || 3}
       left={windowLeftLocation || 6}
-      current={current}
       handleClose={handleClose}
     >
       <Canvas
