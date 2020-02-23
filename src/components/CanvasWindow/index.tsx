@@ -63,6 +63,7 @@ const CanvasWindow: React.FC<PropTypes> = ({
     <Window
       id={id}
       useDraggable
+      minimizable={true}
       contentWidth={canvasWidth / 16}
       contentHeight={canvasHeight / 16}
       handleClick={(ev: MouseEvent): void => handleCurrentDrawing(ev, id)}

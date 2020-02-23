@@ -18,6 +18,7 @@ type PropTypes = {
   contentHeight: number
   top?: number
   left?: number
+  minimizable?: boolean
   handleClick?(ev: MouseEvent): void
   handleClose?(ev: MouseEvent): void
 }
@@ -30,6 +31,7 @@ const Window: React.FC<PropTypes> = ({
   contentHeight,
   top,
   left,
+  minimizable,
   handleClick,
   handleClose,
 }): ReactElement => {
@@ -51,6 +53,7 @@ const Window: React.FC<PropTypes> = ({
         >
           <WindowBar
             closable
+            minimizable={minimizable}
             handleMinimize={handleMinimize}
             handleClose={handleClose}
           />
@@ -66,7 +69,7 @@ const Window: React.FC<PropTypes> = ({
       contentWidth={contentWidth}
       contentHeight={contentHeight}
     >
-      <WindowBar handleMinimize={handleMinimize} />
+      <WindowBar minimizable={minimizable} handleMinimize={handleMinimize} />
       {children}
     </StyledWindow>
   )
