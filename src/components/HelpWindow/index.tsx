@@ -1,10 +1,10 @@
 import React, { ReactElement, useState, useEffect } from "react"
 
 import Window from "../Window"
-import { TopDiv, HelpCover, TextDiv, HR, H1, H2, P, Code } from "./styles"
+import { TopDiv, HelpCover, TextDiv, HR, H1, H2, P, Code, A } from "./styles"
 
 const CONTENT_WIDTH = 400
-const CONTENT_HEIGHT = 635
+const CONTENT_HEIGHT = 640
 
 type PropTypes = {
   handleClose(): void
@@ -47,25 +47,32 @@ const HelpWindow: React.FC<PropTypes> = ({ handleClose }): ReactElement => {
             <P>
               A small multi-window drawing app written in TypeScript. The app
               uses the{" "}
-              <a
+              <A
                 href="https://github.com/jtanadi/gambar"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Gambar
-              </a>{" "}
+              </A>{" "}
               library instead of interacting directly with the Canvas API.
             </P>
             <P>
-              Doodler is a work-in-progress written by Jesen Tanadi and is open
-              sourced on{" "}
-              <a
+              Doodler is a work-in-progress written by{" "}
+              <A
+                href="https://dev.jesentanadi.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Jesen Tanadi
+              </A>{" "}
+              and is open sourced on{" "}
+              <A
                 href="https://github.com/jtanadi/doodler/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 GitHub
-              </a>
+              </A>
               .
             </P>
             <HR />

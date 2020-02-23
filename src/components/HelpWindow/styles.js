@@ -37,6 +37,7 @@ const H2 = styled.h2`
 
 const P = styled.p`
   margin-top: 0;
+  line-height: 1.2;
 `
 
 const Code = styled.span`
@@ -46,4 +47,12 @@ const Code = styled.span`
   background-color: lightgray;
 `
 
-export { TopDiv, HelpCover, TextDiv, HR, H1, H2, P, Code }
+const A = styled.a`
+  color: tomato;
+
+  &:hover {
+    text-decoration: none;
+  }
+`
+
+export { TopDiv, HelpCover, TextDiv, HR, H1, H2, P, Code, A }
