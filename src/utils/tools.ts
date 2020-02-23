@@ -39,12 +39,12 @@ const drawingTools: Tool[] = [
     icon: "🔵️",
   },
   {
-    type: DrawingToolTypes.LINE,
-    icon: "➖️",
-  },
-  {
     type: DrawingToolTypes.DIAMOND,
     icon: "🔷️",
+  },
+  {
+    type: DrawingToolTypes.LINE,
+    icon: "➖️",
   },
   {
     type: DrawingToolTypes.POLYLINE,
