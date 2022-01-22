@@ -17,7 +17,7 @@
     "express": "^4.17.1",
     "gambar": "github:jtanadi/gambar#master",
     "lodash": "^4.17.15",
-    "nanoid": "^2.1.11",
+    "nanoid": "^3.1.31",
     "react": "^16.9.0",
     "react-color": "^2.18.0",
     "react-dom": "^16.9.0",
