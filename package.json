@@ -14,7 +14,7 @@
     "postinstall": "./node_modules/.bin/parcel build src/index.html --public-url ./"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "gambar": "github:jtanadi/gambar#master",
     "lodash": "^4.17.15",
     "nanoid": "^2.1.11",
